@@ -26,11 +26,16 @@ class QmyWidget(QWidget):
                     return '7777'
                 return input
 
+        class IPValidator(QRegExpValidator):
+            def validate(self, input: str, pos: int) -> [QValidator.State, str, int]:
+                input = input.replace('。', '.')
+                return super().validate(input, pos)
+
         validator_1 = PortValidator(0, 65535, self.__ui.TargetPortLineEdit)
         self.__ui.TargetPortLineEdit.setValidator(validator_1)
         self.__ui.MyPortLineEdit.setValidator(validator_1)
         reg_ex = QRegExp("((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)")
-        ip_input_validator = QRegExpValidator(reg_ex, self.__ui.TargetIPLineEdit)
+        ip_input_validator = IPValidator(reg_ex, self.__ui.TargetIPLineEdit)
         self.__ui.TargetIPLineEdit.setValidator(ip_input_validator)
 
     def editable(self, able: bool = True):
