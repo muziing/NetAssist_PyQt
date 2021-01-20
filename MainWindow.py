@@ -1,5 +1,5 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon, QIntValidator, QValidator
+from PyQt5.QtCore import Qt, QRegExp
+from PyQt5.QtGui import QIcon, QIntValidator, QValidator, QRegExpValidator
 from PyQt5.QtWidgets import QWidget
 import MainWindowUI
 import MySocket
@@ -26,14 +26,12 @@ class QmyWidget(QWidget):
                     return '7777'
                 return input
 
-        class IPValidator(QValidator):
-            pass
-
         validator_1 = PortValidator(0, 65535, self.__ui.TargetPortLineEdit)
         self.__ui.TargetPortLineEdit.setValidator(validator_1)
         self.__ui.MyPortLineEdit.setValidator(validator_1)
-        # validator_2 = IPValidator(self.__ui.TargetIPLineEdit)
-        # self.__ui.TargetIPLineEdit.setValidator(validator_2)
+        reg_ex = QRegExp("((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)")
+        ip_input_validator = QRegExpValidator(reg_ex, self.__ui.TargetIPLineEdit)
+        self.__ui.TargetIPLineEdit.setValidator(ip_input_validator)
 
     def editable(self, able: bool = True):
         """当连接建立后，部分选项不可再修改"""
