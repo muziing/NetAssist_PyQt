@@ -17,6 +17,9 @@ class Ui_Form(object):
         Form.resize(800, 600)
         Form.setMinimumSize(QtCore.QSize(600, 450))
         Form.setMaximumSize(QtCore.QSize(1000, 750))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/img/Network.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Form.setWindowIcon(icon)
         self.gridLayout_2 = QtWidgets.QGridLayout(Form)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -211,8 +214,8 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "网络调试助手"))
         self.ProtocolTypeLabel.setText(_translate("Form", "协议类型"))
-        self.ProtocolTypeComboBox.setItemText(0, _translate("Form", "UDP"))
-        self.ProtocolTypeComboBox.setItemText(1, _translate("Form", "TCP"))
+        self.ProtocolTypeComboBox.setItemText(0, _translate("Form", "TCP"))
+        self.ProtocolTypeComboBox.setItemText(1, _translate("Form", "UDP"))
         self.MyIPLabel.setText(_translate("Form", "本机IP地址"))
         self.MyPortLabel.setText(_translate("Form", "本地端口"))
         self.ConnectButton.setText(_translate("Form", "连接网络"))
@@ -238,3 +241,4 @@ class Ui_Form(object):
         self.label_10.setText(_translate("Form", "接收计数:"))
         self.ReceieveCounterLabel.setText(_translate("Form", "0"))
         self.CounterResetButton.setText(_translate("Form", "复位计数"))
+import resources_rc
