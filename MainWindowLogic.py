@@ -68,12 +68,12 @@ class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic)
         if target_port == -1 and target_ip == '':
             server_flag = True
         elif target_port == -1 and target_ip != '':
-            mb = QMessageBox(QMessageBox.Critical, 'Client启动错误', '未输入目标端口号', QMessageBox.Ok, self)
+            mb = QMessageBox(QMessageBox.Critical, 'Client启动错误', '请输入目标端口号', QMessageBox.Ok, self)
             mb.open()
             # 提前终止槽函数
             return None
         elif target_port != -1 and target_ip == '':
-            mb = QMessageBox(QMessageBox.Critical, 'Client启动错误', '未输入目标IP地址', QMessageBox.Ok, self)
+            mb = QMessageBox(QMessageBox.Critical, 'Client启动错误', '请输入目标IP地址', QMessageBox.Ok, self)
             mb.open()
             # 提前终止槽函数
             return None
@@ -86,8 +86,15 @@ class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic)
             self.link_signal.emit(self.ServerUDP, '', my_port, target_port)
         elif protocol_type_index == 1 and not server_flag:
             self.link_signal.emit(self.ClientUDP, target_ip, my_port, target_port)
-
+        # TODO
         # self.editable(False)  # 建立连接后不可再修改参数
+
+    def send_link(self):
+        """
+        SendButton控件点击触发的槽
+        :return: None
+        """
+        send_msg = self.__ui.SendPlainTextEdit.toPlainText()
 
     ServerTCP = 0
     ClientTCP = 1
