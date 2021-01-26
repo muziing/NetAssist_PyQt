@@ -6,7 +6,8 @@ import ServerClientLogic
 
 
 class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic):
-    link_signal = pyqtSignal((int, str, int, int))  # 连接类型, 目标IP, 本机端口, 目标端口
+    # link_signal = pyqtSignal((int, str, int, int))  # 连接类型, 目标IP, 本机端口, 目标端口
+    link_signal = pyqtSignal(tuple)  # 连接类型, 目标IP, 本机端口, 目标端口
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -80,13 +81,13 @@ class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic)
             return None
 
         if protocol_type_index == 0 and server_flag:
-            self.link_signal.emit(self.ServerTCP, '', my_port, target_port)
+            self.link_signal.emit((self.ServerTCP, '', my_port, target_port))
         elif protocol_type_index == 0 and not server_flag:
-            self.link_signal.emit(self.ClientTCP, target_ip, my_port, target_port)
+            self.link_signal.emit((self.ClientTCP, target_ip, my_port, target_port))
         elif protocol_type_index == 1 and server_flag:
-            self.link_signal.emit(self.ServerUDP, '', my_port, target_port)
+            self.link_signal.emit((self.ServerUDP, '', my_port, target_port))
         elif protocol_type_index == 1 and not server_flag:
-            self.link_signal.emit(self.ClientUDP, target_ip, my_port, target_port)
+            self.link_signal.emit((self.ClientUDP, target_ip, my_port, target_port))
         # TODO
         self.editable(False)  # 建立连接后不可再修改参数
 
@@ -96,6 +97,13 @@ class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic)
         :return: None
         """
         send_msg = self.__ui.SendPlainTextEdit.toPlainText()
+
+    def msg_write(self, msg):
+        """
+        将接收到的消息写入ReceivePlainTextEdit
+        :return: None
+        """
+        self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
 
     ServerTCP = 0
     ClientTCP = 1

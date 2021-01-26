@@ -2,7 +2,7 @@ import socket
 import threading
 import time
 
-from PyQt5 import QtCore
+from PyQt5.QtCore import pyqtSignal
 
 import stopThreading
 
@@ -19,8 +19,9 @@ def get_host_ip() -> str:
 
 
 class TcpLogic:
+    tcp_signal_write_msg = pyqtSignal(str)
+
     def __init__(self):
-        self.signal_write_msg = QtCore.pyqtSignal(str)
         self.tcp_socket = None
         self.sever_th = None
         self.client_th = None
@@ -43,13 +44,13 @@ class TcpLogic:
             self.tcp_socket.bind(('', port))
         except Exception as ret:
             msg = '请检查端口号\n'
-            self.signal_write_msg.emit(msg)
+            self.tcp_signal_write_msg.emit(msg)
         else:
             self.tcp_socket.listen()
             self.sever_th = threading.Thread(target=self.tcp_server_concurrency)
             self.sever_th.start()
             msg = 'TCP服务端正在监听端口:%s\n' % str(port)
-            self.signal_write_msg.emit(msg)
+            self.tcp_signal_write_msg.emit(msg)
 
     def tcp_server_concurrency(self):
         """
@@ -68,7 +69,7 @@ class TcpLogic:
                 # 将创建的客户端套接字存入列表,client_address为ip和端口的元组
                 self.client_socket_list.append((client_socket, client_address))
                 msg = f'TCP服务端已连接IP:{client_address}端口:{client_socket}\n'
-                self.signal_write_msg.emit(msg)
+                self.tcp_signal_write_msg.emit(msg)
             # 轮询客户端套接字列表，接收数据
             for client, address in self.client_socket_list:
                 try:
@@ -79,7 +80,7 @@ class TcpLogic:
                     if recv_msg:
                         msg = recv_msg.decode('utf-8')
                         msg = '来自IP:{}端口:{}:\n{}\n'.format(address[0], address[1], msg)
-                        self.signal_write_msg.emit(msg)
+                        self.tcp_signal_write_msg.emit(msg)
                     else:
                         client.close()
                         self.client_socket_list.remove((client, address))
@@ -94,20 +95,20 @@ class TcpLogic:
             address = (str(ip), int(port))
         except Exception as ret:
             msg = '请检查目标IP，目标端口\n'
-            self.signal_write_msg.emit(msg)
+            self.tcp_signal_write_msg.emit(msg)
         else:
             try:
                 msg = '正在连接目标服务器\n'
-                self.signal_write_msg.emit(msg)
+                self.tcp_signal_write_msg.emit(msg)
                 self.tcp_socket.connect(address)
             except Exception as ret:
                 msg = '无法连接目标服务器\n'
-                self.signal_write_msg.emit(msg)
+                self.tcp_signal_write_msg.emit(msg)
             else:
                 self.client_th = threading.Thread(target=self.tcp_client_concurrency, args=(address,))
                 self.client_th.start()
                 msg = 'TCP客户端已连接IP:%s端口:%s\n' % address
-                self.signal_write_msg.emit(msg)
+                self.tcp_signal_write_msg.emit(msg)
 
     def tcp_client_concurrency(self, address):
         """
@@ -119,38 +120,38 @@ class TcpLogic:
             if recv_msg:
                 msg = recv_msg.decode('utf-8')
                 msg = '来自IP:{}端口:{}:\n{}\n'.format(address[0], address[1], msg)
-                self.signal_write_msg.emit(msg)
+                self.tcp_signal_write_msg.emit(msg)
             else:
                 self.tcp_socket.close()
                 self.reset()
                 msg = '从服务器断开连接\n'
-                self.signal_write_msg.emit(msg)
+                self.tcp_signal_write_msg.emit(msg)
                 break
 
-    def tcp_send(self):
+    def tcp_send(self, send_msg):
         """
         功能函数，用于TCP服务端和TCP客户端发送消息
         :return: None
         """
         if self.link is False:
             msg = '请选择服务，并点击连接网络\n'
-            self.signal_write_msg.emit(msg)
+            self.tcp_signal_write_msg.emit(msg)
         else:
             try:
-                send_msg = (str(self.textEdit_send.toPlainText())).encode('utf-8')
+                send_msg = send_msg.encode('utf-8')
                 if self.comboBox_tcp.currentIndex() == 0:
                     # 向所有连接的客户端发送消息
                     for client, address in self.client_socket_list:
                         client.send(send_msg)
                     msg = 'TCP服务端已发送\n'
-                    self.signal_write_msg.emit(msg)
+                    self.tcp_signal_write_msg.emit(msg)
                 if self.comboBox_tcp.currentIndex() == 1:
                     self.tcp_socket.send(send_msg)
                     msg = 'TCP客户端已发送\n'
-                    self.signal_write_msg.emit(msg)
+                    self.tcp_signal_write_msg.emit(msg)
             except Exception as ret:
                 msg = '发送失败\n'
-                self.signal_write_msg.emit(msg)
+                self.tcp_signal_write_msg.emit(msg)
 
     def tcp_close(self):
         """
@@ -172,7 +173,7 @@ class TcpLogic:
                 self.tcp_socket.close()
                 if self.link is True:
                     msg = '已断开网络\n'
-                    self.signal_write_msg.emit(msg)
+                    self.tcp_signal_write_msg.emit(msg)
             except Exception as ret:
                 pass
         try:
@@ -186,8 +187,9 @@ class TcpLogic:
 
 
 class UdpLogic:
+    udp_signal_write_msg = pyqtSignal(str)
+
     def __init__(self):
-        self.signal_write_msg = QtCore.pyqtSignal(str)
         self.udp_socket = None
         self.address = None
         self.sever_th = None
@@ -205,12 +207,12 @@ class UdpLogic:
             self.udp_socket.bind(address)
         except Exception as ret:
             msg = '请检查端口号\n'
-            self.signal_write_msg.emit(msg)
+            self.udp_signal_write_msg.emit(msg)
         else:
             self.sever_th = threading.Thread(target=self.udp_server_concurrency)
             self.sever_th.start()
             msg = 'UDP服务端正在监听端口:{}\n'.format(port)
-            self.signal_write_msg.emit(msg)
+            self.udp_signal_write_msg.emit(msg)
 
     def udp_server_concurrency(self):
         """
@@ -221,7 +223,7 @@ class UdpLogic:
             recv_msg, recv_addr = self.udp_socket.recvfrom(1024)
             msg = recv_msg.decode('utf-8')
             msg = '来自IP:{}端口:{}:\n{}\n'.format(recv_addr[0], recv_addr[1], msg)
-            self.signal_write_msg.emit(msg)
+            self.udp_signal_write_msg.emit(msg)
 
     def udp_client_start(self, ip, port):
         """
@@ -233,10 +235,10 @@ class UdpLogic:
             self.address = (str(ip), int(port))
         except Exception as ret:
             msg = '请检查目标IP，目标端口\n'
-            self.signal_write_msg.emit(msg)
+            self.udp_signal_write_msg.emit(msg)
         else:
             msg = 'UDP客户端已启动\n'
-            self.signal_write_msg.emit(msg)
+            self.udp_signal_write_msg.emit(msg)
 
     def udp_send(self):
         """
@@ -245,16 +247,16 @@ class UdpLogic:
         """
         if self.link_flag is False:
             msg = '请选择服务，并点击连接网络\n'
-            self.signal_write_msg.emit(msg)
+            self.udp_signal_write_msg.emit(msg)
         else:
             try:
                 send_msg = (str(self.textEdit_send.toPlainText())).encode('utf-8')
                 self.udp_socket.sendto(send_msg, self.address)
                 msg = 'UDP客户端已发送\n'
-                self.signal_write_msg.emit(msg)
+                self.udp_signal_write_msg.emit(msg)
             except Exception as ret:
                 msg = '发送失败\n'
-                self.signal_write_msg.emit(msg)
+                self.udp_signal_write_msg.emit(msg)
 
     def udp_close(self):
         """
@@ -265,14 +267,14 @@ class UdpLogic:
             self.udp_socket.close()
             if self.link is True:
                 msg = '已断开网络\n'
-                self.signal_write_msg.emit(msg)
+                self.udp_signal_write_msg.emit(msg)
         except Exception as ret:
             pass
         try:
             self.udp_socket.close()
             if self.link is True:
                 msg = '已断开网络\n'
-                self.signal_write_msg.emit(msg)
+                self.udp_signal_write_msg.emit(msg)
         except Exception as ret:
             pass
         try:
