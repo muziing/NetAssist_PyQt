@@ -45,6 +45,7 @@ class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic)
     def editable(self, able: bool = True):
         """当连接建立后，部分选项不可再修改"""
         if not able:
+            self.__ui.ProtocolTypeComboBox.setDisabled(True)
             self.__ui.MyPortLineEdit.setReadOnly(True)
             self.__ui.TargetIPLineEdit.setReadOnly(True)
             self.__ui.TargetPortLineEdit.setReadOnly(True)
@@ -87,7 +88,7 @@ class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic)
         elif protocol_type_index == 1 and not server_flag:
             self.link_signal.emit(self.ClientUDP, target_ip, my_port, target_port)
         # TODO
-        # self.editable(False)  # 建立连接后不可再修改参数
+        self.editable(False)  # 建立连接后不可再修改参数
 
     def send_link(self):
         """
