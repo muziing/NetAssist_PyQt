@@ -176,14 +176,14 @@ class TcpLogic:
                 self.tcp_signal_write_msg.emit(msg)
             except Exception as ret:
                 print(ret)
-            try:
-                stopThreading.stop_thread(self.sever_th)
-            except Exception as ret:
-                print(ret)
-            try:
-                stopThreading.stop_thread(self.client_th)
-            except Exception as ret:
-                print(ret)
+        try:
+            stopThreading.stop_thread(self.sever_th)
+        except Exception as ret:
+            print(ret)
+        try:
+            stopThreading.stop_thread(self.client_th)
+        except Exception as ret:
+            print(ret)
 
     NoLink = -1
     ServerTCP = 0
