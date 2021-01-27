@@ -101,25 +101,24 @@ class UdpLogic:
                 self.udp_socket.close()
                 msg = '已断开网络\n'
                 self.udp_signal_write_msg.emit(msg)
-                # TODO 系统会报错，需要修bug
             except Exception as ret:
                 pass
 
-        elif self.link_flag == self.ClientUDP:
+        if self.link_flag == self.ClientUDP:
             try:
                 self.udp_socket.close()
                 msg = '已断开网络\n'
                 self.udp_signal_write_msg.emit(msg)
             except Exception as ret:
                 pass
-            try:
-                StopThreading.stop_thread(self.sever_th)
-            except Exception:
-                pass
-            try:
-                StopThreading.stop_thread(self.client_th)
-            except Exception:
-                pass
+        try:
+            StopThreading.stop_thread(self.sever_th)
+        except Exception:
+            pass
+        try:
+            StopThreading.stop_thread(self.client_th)
+        except Exception:
+            pass
 
     NoLink = -1
     ServerUDP = 2
