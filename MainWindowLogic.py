@@ -3,7 +3,7 @@ from PyQt5.QtGui import QIntValidator, QValidator, QRegExpValidator
 from PyQt5.QtWidgets import QWidget, QMessageBox
 
 import MainWindowUI
-from ServerClientLogic import get_host_ip
+from UdpLogic import get_host_ip
 
 
 class QmyWidget(QWidget):
@@ -149,6 +149,7 @@ class QmyWidget(QWidget):
     def counter_signal_handler(self, send_count, receive_count):
         self.__ui.SendCounterLabel.setText(str(send_count))
         self.__ui.ReceiveCounterLabel.setText(str(receive_count))
+
     # TODO 发送接收计数器
 
     def counter_reset_button_handler(self):

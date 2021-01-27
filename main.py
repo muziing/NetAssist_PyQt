@@ -1,7 +1,8 @@
 from PyQt5.Qt import *
 import sys
 from MainWindowLogic import *
-from ServerClientLogic import *
+from TcpLogic import *
+from UdpLogic import *
 
 
 class MainWindow(QmyWidget, TcpLogic, UdpLogic):
@@ -31,6 +32,7 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
     def disconnect_signal_handler(self):
         self.tcp_close()
         self.udp_close()
+        # TODO 关闭窗口自动断开连接
 
     def send_signal_handler(self, msg):
         if self.link_flag == self.ServerTCP or self.link_flag == self.ClientTCP:
