@@ -32,7 +32,6 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
     def disconnect_signal_handler(self):
         self.tcp_close()
         self.udp_close()
-        # TODO 关闭窗口自动断开连接
 
     def send_signal_handler(self, msg):
         if self.link_flag == self.ServerTCP or self.link_flag == self.ClientTCP:
@@ -42,6 +41,14 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
             self.udp_send(msg)
             self.SendCounter += 1
         self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
+
+    def closeEvent(self, event) -> None:
+        """
+            重写closeEvent方法，实现MainWindow窗体关闭时执行一些代码
+            :param event: close()触发的事件
+            :return: None
+            """
+        self.disconnect_signal_handler()
 
 
 if __name__ == '__main__':
