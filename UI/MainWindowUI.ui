@@ -139,6 +139,12 @@
        <property name="text">
         <string>连接网络</string>
        </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
      <item>
@@ -386,8 +392,26 @@
        </item>
        <item>
         <widget class="QLabel" name="StateLabel">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>25</height>
+          </size>
+         </property>
          <property name="text">
-          <string>建立UDP连接成功</string>
+          <string>未连接</string>
          </property>
         </widget>
        </item>
@@ -492,28 +516,12 @@
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>722</x>
-     <y>506</y>
+     <x>771</x>
+     <y>503</y>
     </hint>
     <hint type="destinationlabel">
      <x>458</x>
      <y>262</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>SendButton</sender>
-   <signal>clicked()</signal>
-   <receiver>SendPlainTextEdit</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>520</x>
-     <y>471</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>428</x>
-     <y>494</y>
     </hint>
    </hints>
   </connection>

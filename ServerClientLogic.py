@@ -27,7 +27,7 @@ class TcpLogic:
         self.client_th = None
         self.client_socket_list = list()
 
-        self.link = False  # 用于标记是否开启了连接
+        self.link_flag = -1  # 用于标记是否开启了连接
 
     def tcp_server_start(self, port):
         """
@@ -68,7 +68,7 @@ class TcpLogic:
                 client_socket.setblocking(False)
                 # 将创建的客户端套接字存入列表,client_address为ip和端口的元组
                 self.client_socket_list.append((client_socket, client_address))
-                msg = f'TCP服务端已连接IP:{client_address}端口:{client_socket}\n'
+                msg = 'TCP服务端已连接IP:%s端口:%s\n' % client_address
                 self.tcp_signal_write_msg.emit(msg)
             # 轮询客户端套接字列表，接收数据
             for client, address in self.client_socket_list:
@@ -123,7 +123,7 @@ class TcpLogic:
                 self.tcp_signal_write_msg.emit(msg)
             else:
                 self.tcp_socket.close()
-                self.reset()
+                # self.reset()
                 msg = '从服务器断开连接\n'
                 self.tcp_signal_write_msg.emit(msg)
                 break
@@ -133,19 +133,19 @@ class TcpLogic:
         功能函数，用于TCP服务端和TCP客户端发送消息
         :return: None
         """
-        if self.link is False:
+        if self.link_flag == -1:
             msg = '请选择服务，并点击连接网络\n'
             self.tcp_signal_write_msg.emit(msg)
         else:
             try:
                 send_msg = send_msg.encode('utf-8')
-                if self.comboBox_tcp.currentIndex() == 0:
+                if self.link_flag == 0:
                     # 向所有连接的客户端发送消息
                     for client, address in self.client_socket_list:
                         client.send(send_msg)
                     msg = 'TCP服务端已发送\n'
                     self.tcp_signal_write_msg.emit(msg)
-                if self.comboBox_tcp.currentIndex() == 1:
+                if self.link_flag == 1:
                     self.tcp_socket.send(send_msg)
                     msg = 'TCP客户端已发送\n'
                     self.tcp_signal_write_msg.emit(msg)
@@ -158,38 +158,38 @@ class TcpLogic:
         功能函数，关闭网络连接的方法
         :return:
         """
-        if self.comboBox_tcp.currentIndex() == 0:
+        if self.link_flag == 0:
             try:
                 for client, address in self.client_socket_list:
                     client.close()
                 self.tcp_socket.close()
-                if self.link is True:
-                    msg = '已断开网络\n'
-                    self.signal_write_msg.emit(msg)
+                msg = '已断开网络\n'
+                self.tcp_signal_write_msg.emit(msg)
             except Exception as ret:
                 pass
-        if self.comboBox_tcp.currentIndex() == 1:
+
+        elif self.link_flag == 1:
             try:
                 self.tcp_socket.close()
-                if self.link is True:
-                    msg = '已断开网络\n'
-                    self.tcp_signal_write_msg.emit(msg)
+                msg = '已断开网络\n'
+                self.tcp_signal_write_msg.emit(msg)
             except Exception as ret:
                 pass
-        try:
-            stopThreading.stop_thread(self.sever_th)
-        except Exception:
-            pass
-        try:
-            stopThreading.stop_thread(self.client_th)
-        except Exception:
-            pass
+            try:
+                stopThreading.stop_thread(self.sever_th)
+            except Exception:
+                pass
+            try:
+                stopThreading.stop_thread(self.client_th)
+            except Exception:
+                pass
 
 
 class UdpLogic:
     udp_signal_write_msg = pyqtSignal(str)
 
     def __init__(self):
+        self.link_flag = False
         self.udp_socket = None
         self.address = None
         self.sever_th = None
@@ -240,17 +240,17 @@ class UdpLogic:
             msg = 'UDP客户端已启动\n'
             self.udp_signal_write_msg.emit(msg)
 
-    def udp_send(self):
+    def udp_send(self, send_msg):
         """
         功能函数，用于UDP客户端发送消息
         :return: None
         """
-        if self.link_flag is False:
+        if self.link_flag == -1:
             msg = '请选择服务，并点击连接网络\n'
             self.udp_signal_write_msg.emit(msg)
         else:
             try:
-                send_msg = (str(self.textEdit_send.toPlainText())).encode('utf-8')
+                send_msg = send_msg.encode('utf-8')
                 self.udp_socket.sendto(send_msg, self.address)
                 msg = 'UDP客户端已发送\n'
                 self.udp_signal_write_msg.emit(msg)
@@ -263,28 +263,30 @@ class UdpLogic:
         功能函数，关闭网络连接的方法
         :return:
         """
-        try:
-            self.udp_socket.close()
-            if self.link is True:
+        if self.link_flag == 2:
+            try:
+                self.udp_socket.close()
                 msg = '已断开网络\n'
                 self.udp_signal_write_msg.emit(msg)
-        except Exception as ret:
-            pass
-        try:
-            self.udp_socket.close()
-            if self.link is True:
+                # TODO 系统报错
+            except Exception as ret:
+                pass
+
+        elif self.link_flag == 3:
+            try:
+                self.udp_socket.close()
                 msg = '已断开网络\n'
                 self.udp_signal_write_msg.emit(msg)
-        except Exception as ret:
-            pass
-        try:
-            stopThreading.stop_thread(self.sever_th)
-        except Exception:
-            pass
-        try:
-            stopThreading.stop_thread(self.client_th)
-        except Exception:
-            pass
+            except Exception as ret:
+                pass
+            try:
+                stopThreading.stop_thread(self.sever_th)
+            except Exception:
+                pass
+            try:
+                stopThreading.stop_thread(self.client_th)
+            except Exception:
+                pass
 
 
 if __name__ == '__main__':
