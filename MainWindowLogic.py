@@ -1,15 +1,17 @@
 from PyQt5.QtCore import Qt, QRegExp, pyqtSignal
-from PyQt5.QtGui import QIcon, QIntValidator, QValidator, QRegExpValidator
+from PyQt5.QtGui import QIntValidator, QValidator, QRegExpValidator
 from PyQt5.QtWidgets import QWidget, QMessageBox
+
 import MainWindowUI
-import ServerClientLogic
+from ServerClientLogic import get_host_ip
 
 
-class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic):
+class QmyWidget(QWidget):
     # link_signal = pyqtSignal((int, str, int, int))  # 连接类型, 目标IP, 本机端口, 目标端口
     link_signal = pyqtSignal(tuple)  # 连接类型, 目标IP, 本机端口, 目标端口
     disconnect_signal = pyqtSignal()
     send_signal = pyqtSignal(str)
+    counter_signal = pyqtSignal(int, int)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -17,12 +19,16 @@ class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic)
         self.__ui.setupUi(self)
         self.__ui.retranslateUi(self)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 保持窗口最前
-        self.__ui.MyIPLineEdit.setText(ServerClientLogic.get_host_ip())
+        self.__ui.MyIPLineEdit.setText(get_host_ip())
         self.set_validator()
         self.setup_connect_button()
         self.link_flag = self.NoLink
+        self.SendCounter = 0
+        self.ReceiveCounter = 0
+        self.counter_signal.connect(self.counter_signal_handler)
         self.__ui.ConnectButton.clicked.connect(self.setup_connect_button)
         self.__ui.SendButton.clicked.connect(self.send_link)
+        self.__ui.CounterResetButton.clicked.connect(self.counter_reset_button_handler)
 
     def set_validator(self):
         """为IP与端口的QLineEdit设置验证器"""
@@ -124,6 +130,7 @@ class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic)
         """
         send_msg = self.__ui.SendPlainTextEdit.toPlainText()
         self.send_signal.emit(send_msg)
+        # TODO 循环发送功能
 
     def msg_write(self, msg):
         """
@@ -131,11 +138,23 @@ class QmyWidget(QWidget, ServerClientLogic.TcpLogic, ServerClientLogic.UdpLogic)
         :return: None
         """
         self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
+        self.ReceiveCounter += 1
+        self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
 
     def click_disconnect(self):
         self.disconnect_signal.emit()
         self.link_flag = -1
         self.__ui.StateLabel.setText("未连接")
+
+    def counter_signal_handler(self, send_count, receive_count):
+        self.__ui.SendCounterLabel.setText(str(send_count))
+        self.__ui.ReceiveCounterLabel.setText(str(receive_count))
+    # TODO 发送接收计数器
+
+    def counter_reset_button_handler(self):
+        self.SendCounter = 0
+        self.ReceiveCounter = 0
+        self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
 
     NoLink = -1
     ServerTCP = 0

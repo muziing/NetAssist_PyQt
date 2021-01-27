@@ -35,8 +35,11 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
     def send_signal_handler(self, msg):
         if self.link_flag == 0 or self.link_flag == 1:
             self.tcp_send(msg)
+            self.SendCounter += 1
         elif self.link_flag == 3:
             self.udp_send(msg)
+            self.SendCounter += 1
+        self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
 
 
 if __name__ == '__main__':

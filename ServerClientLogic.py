@@ -90,6 +90,7 @@ class TcpLogic:
         功能函数，TCP客户端连接其他服务端的方法
         :return:
         """
+        # TODO TCP客户端可绑定本机端口
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             address = (str(ip), int(port))
@@ -158,7 +159,7 @@ class TcpLogic:
         功能函数，关闭网络连接的方法
         :return:
         """
-        if self.link_flag == 0:
+        if self.link_flag == self.ServerTCP:
             try:
                 for client, address in self.client_socket_list:
                     client.close()
@@ -166,23 +167,27 @@ class TcpLogic:
                 msg = '已断开网络\n'
                 self.tcp_signal_write_msg.emit(msg)
             except Exception as ret:
-                pass
+                print(ret)
 
-        elif self.link_flag == 1:
+        elif self.link_flag == self.ClientTCP:
             try:
                 self.tcp_socket.close()
                 msg = '已断开网络\n'
                 self.tcp_signal_write_msg.emit(msg)
             except Exception as ret:
-                pass
+                print(ret)
             try:
                 stopThreading.stop_thread(self.sever_th)
-            except Exception:
-                pass
+            except Exception as ret:
+                print(ret)
             try:
                 stopThreading.stop_thread(self.client_th)
-            except Exception:
-                pass
+            except Exception as ret:
+                print(ret)
+
+    NoLink = -1
+    ServerTCP = 0
+    ClientTCP = 1
 
 
 class UdpLogic:
@@ -230,6 +235,7 @@ class UdpLogic:
         确认UDP客户端的ip及地址
         :return:
         """
+        # TODO UDP客户端可绑定本机端口
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
             self.address = (str(ip), int(port))
@@ -263,16 +269,16 @@ class UdpLogic:
         功能函数，关闭网络连接的方法
         :return:
         """
-        if self.link_flag == 2:
+        if self.link_flag == self.ServerUDP:
             try:
                 self.udp_socket.close()
                 msg = '已断开网络\n'
                 self.udp_signal_write_msg.emit(msg)
-                # TODO 系统报错
+                # TODO 系统会报错，需要修bug
             except Exception as ret:
                 pass
 
-        elif self.link_flag == 3:
+        elif self.link_flag == self.ClientUDP:
             try:
                 self.udp_socket.close()
                 msg = '已断开网络\n'
@@ -287,6 +293,12 @@ class UdpLogic:
                 stopThreading.stop_thread(self.client_th)
             except Exception:
                 pass
+
+    NoLink = -1
+    ServerUDP = 2
+    ClientUDP = 3
+
+# TODO WebServer
 
 
 if __name__ == '__main__':
