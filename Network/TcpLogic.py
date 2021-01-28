@@ -4,7 +4,7 @@ from time import sleep
 
 from PyQt5.QtCore import pyqtSignal
 
-import StopThreading
+from Network import StopThreading
 
 
 class TcpLogic:
@@ -79,7 +79,6 @@ class TcpLogic:
         功能函数，TCP客户端连接其他服务端的方法
         :return:
         """
-        # TODO TCP客户端可绑定本机端口
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             address = (str(ip), int(port))

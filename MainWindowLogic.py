@@ -1,14 +1,13 @@
-from PyQt5.QtCore import Qt, QRegExp, pyqtSignal
-from PyQt5.QtGui import QIntValidator, QValidator, QRegExpValidator
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QMessageBox
 
-import MainWindowUI
-from UdpLogic import get_host_ip
+from Network.UdpLogic import get_host_ip
+from UI import MainWindowUI
 
 
 class QmyWidget(QWidget):
     # link_signal = pyqtSignal((int, str, int, int))  # 连接类型, 目标IP, 本机端口, 目标端口
-    link_signal = pyqtSignal(tuple)  # 连接类型, 目标IP, 本机端口, 目标端口
+    link_signal = pyqtSignal(tuple)  # 连接类型, 目标IP, 本机端口, 目标端口  # TODO 精简 link_signal
     disconnect_signal = pyqtSignal()
     send_signal = pyqtSignal(str)
     counter_signal = pyqtSignal(int, int)
@@ -19,8 +18,7 @@ class QmyWidget(QWidget):
         self.__ui.setupUi(self)
         self.__ui.retranslateUi(self)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 保持窗口最前
-        self.__ui.MyIPLineEdit.setText(get_host_ip())
-        self.set_validator()
+        self.__ui.MyHostAddrLineEdit.setText(get_host_ip())
         self.setup_connect_button()
         self.link_flag = self.NoLink
         self.SendCounter = 0
@@ -29,29 +27,6 @@ class QmyWidget(QWidget):
         self.__ui.ConnectButton.clicked.connect(self.setup_connect_button)
         self.__ui.SendButton.clicked.connect(self.send_link)
         self.__ui.CounterResetButton.clicked.connect(self.counter_reset_button_handler)
-
-    def set_validator(self):
-        """为IP与端口的QLineEdit设置验证器"""
-
-        class PortValidator(QIntValidator):
-            def fixup(self, input: str) -> str:
-                if len(input) == 0:
-                    return ''
-                elif int(input) > 65535:
-                    return '7777'
-                return input
-
-        class IPValidator(QRegExpValidator):
-            def validate(self, input: str, pos: int) -> [QValidator.State, str, int]:
-                input = input.replace('。', '.')
-                return super().validate(input, pos)
-
-        validator_1 = PortValidator(0, 65535, self.__ui.TargetPortLineEdit)
-        self.__ui.TargetPortLineEdit.setValidator(validator_1)
-        self.__ui.MyPortLineEdit.setValidator(validator_1)
-        reg_ex = QRegExp("((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)")
-        ip_input_validator = IPValidator(reg_ex, self.__ui.TargetIPLineEdit)
-        self.__ui.TargetIPLineEdit.setValidator(ip_input_validator)
 
     def setup_connect_button(self):
         button = self.__ui.ConnectButton
@@ -131,6 +106,7 @@ class QmyWidget(QWidget):
         send_msg = self.__ui.SendPlainTextEdit.toPlainText()
         self.send_signal.emit(send_msg)
         # TODO 循环发送功能
+        # TODO 十六进制发送
 
     def msg_write(self, msg):
         """
@@ -140,6 +116,7 @@ class QmyWidget(QWidget):
         self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
         self.ReceiveCounter += 1
         self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
+        # TODO 十六进制接收
 
     def click_disconnect(self):
         self.disconnect_signal.emit()
@@ -156,6 +133,8 @@ class QmyWidget(QWidget):
         self.SendCounter = 0
         self.ReceiveCounter = 0
         self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
+
+    # TODO 最小化到托盘
 
     NoLink = -1
     ServerTCP = 0

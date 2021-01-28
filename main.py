@@ -1,8 +1,10 @@
-from PyQt5.Qt import *
 import sys
+
+from PyQt5.QtWidgets import QApplication
+
 from MainWindowLogic import *
-from TcpLogic import *
-from UdpLogic import *
+from Network.TcpLogic import *
+from Network.UdpLogic import *
 
 
 class MainWindow(QmyWidget, TcpLogic, UdpLogic):
@@ -30,10 +32,18 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
             self.udp_client_start(target_ip, target_port)
 
     def disconnect_signal_handler(self):
+        """
+        断开连接的槽函数
+        :return: None
+        """
         self.tcp_close()
         self.udp_close()
 
     def send_signal_handler(self, msg):
+        """
+        发送按钮的槽函数
+        :return: None
+        """
         if self.link_flag == self.ServerTCP or self.link_flag == self.ClientTCP:
             self.tcp_send(msg)
             self.SendCounter += 1
@@ -41,13 +51,14 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
             self.udp_send(msg)
             self.SendCounter += 1
         self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
+        # TODO 支持GBK中文编码
 
     def closeEvent(self, event) -> None:
         """
-            重写closeEvent方法，实现MainWindow窗体关闭时执行一些代码
-            :param event: close()触发的事件
-            :return: None
-            """
+        重写closeEvent方法，实现MainWindow窗体关闭时执行一些代码
+        :param event: close()触发的事件
+        :return: None
+        """
         self.disconnect_signal_handler()
 
 

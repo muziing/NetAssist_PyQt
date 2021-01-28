@@ -26,7 +26,7 @@
    <string>网络调试助手</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../resources.qrc">
+   <iconset resource="resources.qrc">
     <normaloff>:/img/Network.png</normaloff>:/img/Network.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2" rowstretch="7,4,1" columnstretch="5,2">
@@ -70,17 +70,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="MyIPLabel">
+      <widget class="QLabel" name="MyHostAddrLabel">
        <property name="text">
         <string>本机IP地址</string>
        </property>
        <property name="buddy">
-        <cstring>MyIPLineEdit</cstring>
+        <cstring>MyHostAddrLineEdit</cstring>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="MyIPLineEdit">
+      <widget class="QLineEdit" name="MyHostAddrLineEdit">
        <property name="inputMask">
         <string/>
        </property>
@@ -100,7 +100,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="MyPortLineEdit">
+      <widget class="PortLineEdit" name="MyPortLineEdit">
        <property name="inputMask">
         <string/>
        </property>
@@ -308,7 +308,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="TargetIPLineEdit">
+        <widget class="IPv4AddrLineEdit" name="TargetIPLineEdit">
          <property name="maxLength">
           <number>15</number>
          </property>
@@ -338,7 +338,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="TargetPortLineEdit">
+        <widget class="PortLineEdit" name="TargetPortLineEdit">
          <property name="maxLength">
           <number>5</number>
          </property>
@@ -547,8 +547,20 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PortLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>UI.MyWidgets</header>
+  </customwidget>
+  <customwidget>
+   <class>IPv4AddrLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>UI.MyWidgets</header>
+  </customwidget>
+ </customwidgets>
  <resources>
-  <include location="../resources.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections>
   <connection>

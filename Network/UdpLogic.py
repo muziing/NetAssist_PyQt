@@ -3,7 +3,7 @@ import threading
 
 from PyQt5.QtCore import pyqtSignal
 
-import StopThreading
+from Network import StopThreading
 
 
 def get_host_ip() -> str:
@@ -62,7 +62,6 @@ class UdpLogic:
         确认UDP客户端的ip及地址
         :return:
         """
-        # TODO UDP客户端可绑定本机端口
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
             self.address = (str(ip), int(port))
