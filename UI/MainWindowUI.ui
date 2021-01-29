@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
-    <normaloff>:/img/Network.png</normaloff>:/img/Network.png</iconset>
+    <normaloff>:/img/Icons/Network.png</normaloff>:/img/Icons/Network.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2" rowstretch="7,4,1" columnstretch="5,2">
    <item row="0" column="1">
@@ -123,7 +123,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="ConnectButton">
+      <widget class="ConnectButton" name="ConnectButton">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -138,6 +138,11 @@
        </property>
        <property name="text">
         <string>连接网络</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/img/Icons/broken_link_72px.ico</normaloff>
+         <normalon>:/img/Icons/link_72px.ico</normalon>:/img/Icons/broken_link_72px.ico</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -556,6 +561,11 @@
   <customwidget>
    <class>IPv4AddrLineEdit</class>
    <extends>QLineEdit</extends>
+   <header>UI.MyWidgets</header>
+  </customwidget>
+  <customwidget>
+   <class>ConnectButton</class>
+   <extends>QPushButton</extends>
    <header>UI.MyWidgets</header>
   </customwidget>
  </customwidgets>

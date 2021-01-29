@@ -18,7 +18,7 @@ class Ui_Form(object):
         Form.setMinimumSize(QtCore.QSize(600, 450))
         Form.setMaximumSize(QtCore.QSize(1000, 750))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/img/Network.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/img/Icons/Network.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Form.setWindowIcon(icon)
         self.gridLayout_2 = QtWidgets.QGridLayout(Form)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -52,9 +52,13 @@ class Ui_Form(object):
         self.verticalLayout.addWidget(self.MyPortLineEdit)
         spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem1)
-        self.ConnectButton = QtWidgets.QPushButton(Form)
+        self.ConnectButton = ConnectButton(Form)
         self.ConnectButton.setMinimumSize(QtCore.QSize(0, 40))
         self.ConnectButton.setMaximumSize(QtCore.QSize(16777215, 40))
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/img/Icons/broken_link_72px.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/img/Icons/link_72px.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        self.ConnectButton.setIcon(icon1)
         self.ConnectButton.setCheckable(True)
         self.ConnectButton.setChecked(False)
         self.ConnectButton.setObjectName("ConnectButton")
@@ -265,5 +269,5 @@ class Ui_Form(object):
         self.label_10.setText(_translate("Form", "接收计数:"))
         self.ReceiveCounterLabel.setText(_translate("Form", "0"))
         self.CounterResetButton.setText(_translate("Form", "复位计数"))
-from UI.MyWidgets import IPv4AddrLineEdit, PortLineEdit
+from UI.MyWidgets import ConnectButton, IPv4AddrLineEdit, PortLineEdit
 import UI.resources_rc

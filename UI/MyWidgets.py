@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtGui import QIntValidator, QRegExpValidator, QValidator
-from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QLineEdit, QPushButton
 
 
 class PortLineEdit(QLineEdit):
@@ -30,3 +30,19 @@ class IPv4AddrLineEdit(QLineEdit):
         super().__init__(parent)
         ip_input_validator = self.IPValidator(self.reg_ex, parent)
         self.setValidator(ip_input_validator)
+
+
+class ConnectButton(QPushButton):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setCheckable(True)
+        self.toggled.connect(self.toggled_slot)
+
+    def toggled_slot(self):
+        """
+        连接按钮状态切换时的额外操作
+        """
+        if not self.isChecked():
+            self.setText("连接网络")
+        else:
+            self.setText("断开连接")

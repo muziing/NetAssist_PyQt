@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="img">
-    <file>Network.png</file>
+    <file>Icons/broken_link_72px.ico</file>
+    <file>Icons/link_72px.ico</file>
+    <file>Icons/Network.png</file>
   </qresource>
 </RCC>

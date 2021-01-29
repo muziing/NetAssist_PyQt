@@ -19,26 +19,21 @@ class QmyWidget(QWidget):
         self.__ui.retranslateUi(self)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 保持窗口最前
         self.__ui.MyHostAddrLineEdit.setText(get_host_ip())
-        self.setup_connect_button()
         self.link_flag = self.NoLink
         self.SendCounter = 0
         self.ReceiveCounter = 0
         self.counter_signal.connect(self.counter_signal_handler)
-        self.__ui.ConnectButton.clicked.connect(self.setup_connect_button)
+        self.__ui.ConnectButton.toggled.connect(self.connect_button_toggled_slot)
         self.__ui.SendButton.clicked.connect(self.send_link)
         self.__ui.CounterResetButton.clicked.connect(self.counter_reset_button_handler)
 
-    def setup_connect_button(self):
-        button = self.__ui.ConnectButton
-        button.setCheckable(True)
-        if not button.isChecked():
-            button.setText("连接网络")
-            self.click_disconnect()
-            self.editable(True)
-        else:
-            button.setText("断开连接")
+    def connect_button_toggled_slot(self, state):
+        if state:
             self.click_link()
             self.editable(False)
+        else:
+            self.click_disconnect()
+            self.editable(True)
 
     def editable(self, able: bool = True):
         """当连接建立后，部分选项不可再修改"""
