@@ -7,7 +7,7 @@ from UI import MainWindowUI
 
 class QmyWidget(QWidget):
     # link_signal = pyqtSignal((int, str, int, int))  # 连接类型, 目标IP, 本机端口, 目标端口
-    link_signal = pyqtSignal(tuple)  # 连接类型, 目标IP, 本机端口, 目标端口  # TODO 精简 link_signal
+    link_signal = pyqtSignal(tuple)  # 连接类型, 目标IP, 本机/目标端口
     disconnect_signal = pyqtSignal()
     send_signal = pyqtSignal(str)
     counter_signal = pyqtSignal(int, int)
@@ -81,19 +81,19 @@ class QmyWidget(QWidget):
             return None
 
         if protocol_type_index == 0 and server_flag:
-            self.link_signal.emit((self.ServerTCP, '', my_port, target_port))
+            self.link_signal.emit((self.ServerTCP, '', my_port))
             self.link_flag = self.ServerTCP
             self.__ui.StateLabel.setText("TCP服务端")
         elif protocol_type_index == 0 and not server_flag:
-            self.link_signal.emit((self.ClientTCP, target_ip, my_port, target_port))
+            self.link_signal.emit((self.ClientTCP, target_ip, target_port))
             self.link_flag = self.ClientTCP
             self.__ui.StateLabel.setText("TCP客户端")
         elif protocol_type_index == 1 and server_flag:
-            self.link_signal.emit((self.ServerUDP, '', my_port, target_port))
+            self.link_signal.emit((self.ServerUDP, '', my_port))
             self.link_flag = self.ServerUDP
             self.__ui.StateLabel.setText("UDP服务端")
         elif protocol_type_index == 1 and not server_flag:
-            self.link_signal.emit((self.ClientUDP, target_ip, my_port, target_port))
+            self.link_signal.emit((self.ClientUDP, target_ip, target_port))
             self.link_flag = self.ClientUDP
             self.__ui.StateLabel.setText("UDP客户端")
         self.editable(False)  # 建立连接后不可再修改参数

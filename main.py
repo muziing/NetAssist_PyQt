@@ -12,24 +12,24 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
         super().__init__(parent)
         self.link_signal.connect(self.link_signal_handler)
         self.disconnect_signal.connect(self.disconnect_signal_handler)
+        self.send_signal.connect(self.send_signal_handler)
         self.tcp_signal_write_msg.connect(self.msg_write)
         self.udp_signal_write_msg.connect(self.msg_write)
-        self.send_signal.connect(self.send_signal_handler)
 
     def link_signal_handler(self, signal):
         """
         发送信号分用的槽函数
         :return: None
         """
-        link_type, target_ip, my_port, target_port = signal
-        if link_type == 0:
-            self.tcp_server_start(my_port)
-        elif link_type == 1:
-            self.tcp_client_start(target_ip, target_port)
-        elif link_type == 2:
-            self.udp_server_start(my_port)
-        elif link_type == 3:
-            self.udp_client_start(target_ip, target_port)
+        link_type, target_ip, port = signal
+        if link_type == self.ServerTCP:
+            self.tcp_server_start(port)
+        elif link_type == self.ClientTCP:
+            self.tcp_client_start(target_ip, port)
+        elif link_type == self.ServerUDP:
+            self.udp_server_start(port)
+        elif link_type == self.ClientUDP:
+            self.udp_client_start(target_ip, port)
 
     def disconnect_signal_handler(self):
         """
