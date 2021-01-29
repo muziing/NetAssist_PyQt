@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="img">
+    <file>Network.png</file>
+  </qresource>
+</RCC>
