@@ -30,6 +30,18 @@
     <normaloff>:/img/Icons/Network.png</normaloff>:/img/Icons/Network.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2" rowstretch="7,4,1" columnstretch="5,2">
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>10</number>
+   </property>
    <item row="0" column="1">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
@@ -40,7 +52,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>60</height>
         </size>
        </property>
       </spacer>
@@ -70,6 +82,19 @@
       </widget>
      </item>
      <item>
+      <spacer name="verticalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QLabel" name="MyHostAddrLabel">
        <property name="text">
         <string>本机IP地址</string>
@@ -88,6 +113,19 @@
         <bool>true</bool>
        </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_6">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <widget class="QLabel" name="MyPortLabel">
@@ -160,7 +198,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>60</height>
         </size>
        </property>
       </spacer>
@@ -176,47 +214,46 @@
       <attribute name="title">
        <string>接收设置</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <widget class="QCheckBox" name="checkBox">
+         <property name="text">
+          <string>十六进制显示</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_3">
+         <property name="text">
+          <string>显示接收日期</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_2">
+         <property name="text">
+          <string>暂停接收显示</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="spacing">
+          <number>7</number>
+         </property>
          <item>
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QPushButton" name="RSaveDataButton">
            <property name="text">
-            <string>十六进制显示</string>
+            <string>保存数据</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_3">
+          <widget class="QPushButton" name="RClearButton">
            <property name="text">
-            <string>显示接收日期</string>
+            <string>清空显示</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_2">
-           <property name="text">
-            <string>暂停接收显示</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QPushButton" name="RSaveDataButton">
-             <property name="text">
-              <string>保存数据</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="RClearButton">
-             <property name="text">
-              <string>清空显示</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
          </item>
         </layout>
        </item>
@@ -245,6 +282,12 @@
         <layout class="QHBoxLayout" name="horizontalLayout_6">
          <item>
           <widget class="QLabel" name="label">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="text">
             <string>循环时间(ms)</string>
            </property>
@@ -252,6 +295,12 @@
          </item>
          <item>
           <widget class="QSpinBox" name="spinBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimum">
             <number>1</number>
            </property>
@@ -267,6 +316,19 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -386,6 +448,12 @@
    </item>
    <item row="2" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <property name="topMargin">
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
