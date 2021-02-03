@@ -1,6 +1,6 @@
-from PyQt5.QtCore import QRegExp
+from PyQt5.QtCore import QRegExp, pyqtSignal
 from PyQt5.QtGui import QIntValidator, QRegExpValidator, QValidator
-from PyQt5.QtWidgets import QLineEdit, QPushButton
+from PyQt5.QtWidgets import QLineEdit, QPushButton, QLabel
 
 
 class PortLineEdit(QLineEdit):
@@ -12,7 +12,7 @@ class PortLineEdit(QLineEdit):
                 return '7777'
             return inputs
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent)
         validator = self.PortValidator(0, 65535, parent)
         self.setValidator(validator)
@@ -26,14 +26,14 @@ class IPv4AddrLineEdit(QLineEdit):
 
     reg_ex = QRegExp("((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)")
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent)
         ip_input_validator = self.IPValidator(self.reg_ex, parent)
         self.setValidator(ip_input_validator)
 
 
 class ConnectButton(QPushButton):
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.setCheckable(True)
         self.toggled.connect(self.toggled_slot)
@@ -46,3 +46,13 @@ class ConnectButton(QPushButton):
             self.setText("连接网络")
         else:
             self.setText("断开连接")
+
+
+class CounterResetLabel(QLabel):
+    clicked = pyqtSignal()
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def mousePressEvent(self, event) -> None:
+        self.clicked.emit()

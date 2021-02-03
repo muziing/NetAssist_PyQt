@@ -25,7 +25,7 @@ class QmyWidget(QWidget):
         self.counter_signal.connect(self.counter_signal_handler)
         self.__ui.ConnectButton.toggled.connect(self.connect_button_toggled_slot)
         self.__ui.SendButton.clicked.connect(self.send_link)
-        self.__ui.CounterResetButton.clicked.connect(self.counter_reset_button_handler)
+        self.__ui.CounterResetLabel.clicked.connect(self.counter_reset_button_handler)
 
     def connect_button_toggled_slot(self, state):
         if state:
