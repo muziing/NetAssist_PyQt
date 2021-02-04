@@ -1,4 +1,4 @@
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog
 
 from Network.UdpLogic import get_host_ip
@@ -17,11 +17,14 @@ class QmyWidget(QWidget):
         self.__ui = MainWindowUI.Ui_Form()
         self.__ui.setupUi(self)
         self.__ui.retranslateUi(self)
+
         self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 保持窗口最前
         self.__ui.MyHostAddrLineEdit.setText(get_host_ip())
+
         self.link_flag = self.NoLink
         self.SendCounter = 0
         self.ReceiveCounter = 0
+
         self.counter_signal.connect(self.counter_signal_handler)
         self.__ui.ConnectButton.toggled.connect(self.connect_button_toggled_slot)
         self.__ui.SendButton.clicked.connect(self.send_link)
@@ -98,10 +101,19 @@ class QmyWidget(QWidget):
         SendButton控件点击触发的槽
         :return: None
         """
-        send_msg = self.__ui.SendPlainTextEdit.toPlainText()
-        self.send_signal.emit(send_msg)
-        # TODO 循环发送功能
-        # TODO 十六进制发送
+        if self.link_flag != self.NoLink:
+            loop_flag = self.__ui.LoopSendCheckBox.checkState()
+            send_msg = self.__ui.SendPlainTextEdit.toPlainText()
+            if loop_flag == 0:
+                self.send_signal.emit(send_msg)
+            elif loop_flag == 2:
+                send_timer = QTimer(self)
+                send_timer.start(int(self.__ui.LoopSendSpinBox.text()))
+                send_timer.timeout.connect(lambda: self.send_signal.emit(send_msg))
+                self.__ui.LoopSendCheckBox.stateChanged.connect(lambda val: send_timer.stop() if val == 0 else None)
+                self.__ui.ConnectButton.toggled.connect(lambda val: None if val else send_timer.stop())
+
+            # TODO 十六进制发送
 
     def msg_write(self, msg):
         """
@@ -130,6 +142,10 @@ class QmyWidget(QWidget):
         self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
 
     def r_save_data_button_handler(self):
+        """
+        接收设置保存数据按键的槽函数
+        :return: None
+        """
         text = self.__ui.ReceivePlainTextEdit.toPlainText()
         file_name = QFileDialog.getSaveFileName(self, "保存到txt", "./", "ALL(*, *);;txt文件(*.txt)", "txt文件(*.txt)")[0]
         with open(file_name, mode='w') as f:

@@ -58,7 +58,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>50</height>
         </size>
        </property>
       </spacer>
@@ -283,6 +283,19 @@
        </property>
       </widget>
      </item>
+     <item>
+      <spacer name="verticalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
     </layout>
    </item>
    <item row="0" column="1">
@@ -351,13 +364,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_3">
-         <property name="text">
-          <string>显示接收日期</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QCheckBox" name="checkBox_2">
          <property name="text">
           <string>暂停接收显示</string>
@@ -400,7 +406,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_5">
+        <widget class="QCheckBox" name="LoopSendCheckBox">
          <property name="text">
           <string>循环发送</string>
          </property>
@@ -425,7 +431,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox">
+          <widget class="QSpinBox" name="LoopSendSpinBox">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
