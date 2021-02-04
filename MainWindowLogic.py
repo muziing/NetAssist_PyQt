@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QWidget, QMessageBox
+from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog
 
 from Network.UdpLogic import get_host_ip
 from UI import MainWindowUI
@@ -25,6 +25,7 @@ class QmyWidget(QWidget):
         self.counter_signal.connect(self.counter_signal_handler)
         self.__ui.ConnectButton.toggled.connect(self.connect_button_toggled_slot)
         self.__ui.SendButton.clicked.connect(self.send_link)
+        self.__ui.RSaveDataButton.clicked.connect(self.r_save_data_button_handler)
         self.__ui.CounterResetLabel.clicked.connect(self.counter_reset_button_handler)
 
     def connect_button_toggled_slot(self, state):
@@ -127,6 +128,12 @@ class QmyWidget(QWidget):
         self.SendCounter = 0
         self.ReceiveCounter = 0
         self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
+
+    def r_save_data_button_handler(self):
+        text = self.__ui.ReceivePlainTextEdit.toPlainText()
+        file_name = QFileDialog.getSaveFileName(self, "保存到txt", "./", "ALL(*, *);;txt文件(*.txt)", "txt文件(*.txt)")[0]
+        with open(file_name, mode='w') as f:
+            f.write(text)
 
     # TODO 最小化到托盘
 
