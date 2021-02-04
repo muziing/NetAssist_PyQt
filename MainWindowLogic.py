@@ -30,7 +30,6 @@ class QmyWidget(QWidget):
     def connect_button_toggled_slot(self, state):
         if state:
             self.click_link()
-            self.editable(False)
         else:
             self.click_disconnect()
             self.editable(True)
@@ -57,6 +56,7 @@ class QmyWidget(QWidget):
 
         my_port = get_int_port(self.__ui.MyPortLineEdit.text())
         target_port = get_int_port(self.__ui.TargetPortLineEdit.text())
+        self.editable(False)  # 建立连接后不可再修改参数
 
         if target_port == -1 and target_ip == '':
             server_flag = True
@@ -64,14 +64,14 @@ class QmyWidget(QWidget):
             mb = QMessageBox(QMessageBox.Critical, 'Client启动错误', '请输入目标端口号', QMessageBox.Ok, self)
             mb.open()
             self.__ui.ConnectButton.setChecked(False)
-            # TODO 连接按钮复原
+            self.editable(True)
             # 提前终止槽函数
             return None
         elif target_port != -1 and target_ip == '':
             mb = QMessageBox(QMessageBox.Critical, 'Client启动错误', '请输入目标IP地址', QMessageBox.Ok, self)
             mb.open()
             self.__ui.ConnectButton.setChecked(False)
-            # TODO 连接按钮复原
+            self.editable(True)
             # 提前终止槽函数
             return None
 
@@ -91,7 +91,6 @@ class QmyWidget(QWidget):
             self.link_signal.emit((self.ClientUDP, target_ip, target_port))
             self.link_flag = self.ClientUDP
             self.__ui.StateLabel.setText("UDP客户端")
-        self.editable(False)  # 建立连接后不可再修改参数
 
     def send_link(self):
         """
