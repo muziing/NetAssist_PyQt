@@ -157,6 +157,9 @@
      </item>
      <item>
       <widget class="PortLineEdit" name="MyPortLineEdit">
+       <property name="toolTip">
+        <string>作为Server启动时绑定的本地端口</string>
+       </property>
        <property name="inputMask">
         <string/>
        </property>
@@ -196,6 +199,9 @@
      </item>
      <item>
       <widget class="IPv4AddrLineEdit" name="TargetIPLineEdit">
+       <property name="toolTip">
+        <string>作为Client启动时连接服务器的地址</string>
+       </property>
        <property name="maxLength">
         <number>15</number>
        </property>
@@ -232,6 +238,9 @@
      </item>
      <item>
       <widget class="PortLineEdit" name="TargetPortLineEdit">
+       <property name="toolTip">
+        <string>作为Client启动时连接服务器的端口</string>
+       </property>
        <property name="maxLength">
         <number>5</number>
        </property>
@@ -377,6 +386,9 @@
          </property>
          <item>
           <widget class="QPushButton" name="RSaveDataButton">
+           <property name="toolTip">
+            <string>保存接收区内容到txt文件</string>
+           </property>
            <property name="text">
             <string>保存数据</string>
            </property>
@@ -384,6 +396,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="RClearButton">
+           <property name="toolTip">
+            <string>清空接收区显示</string>
+           </property>
            <property name="text">
             <string>清空显示</string>
            </property>
@@ -502,8 +517,14 @@
          <height>45</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Alt+Enter发送</string>
+       </property>
        <property name="text">
         <string>发送</string>
+       </property>
+       <property name="shortcut">
+        <string>Alt+Return</string>
        </property>
       </widget>
      </item>
@@ -518,6 +539,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>网络连接状态</string>
        </property>
        <property name="text">
         <string>状态:</string>
