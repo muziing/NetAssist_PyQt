@@ -4,10 +4,10 @@
 
 学习PyQt5过程中用来练习实践的项目。能实现基本的TCP、UDP连接与信息发送。
 
-![](https://oss.muzing.top/image/image-20210204171122296.png)
+![图1](https://oss.muzing.top/image/image-20210204171122296.png)
 
-![](https://oss.muzing.top/image/image-20210204183144606.png)
+![图2](https://oss.muzing.top/image/image-20210204183144606.png)
 
 ## 结构
 
-![](https://oss.muzing.top/image/image-20210204193805962.png)
+![继承关系](https://oss.muzing.top/image/image-20210204193805962.png)
