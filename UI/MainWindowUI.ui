@@ -6,20 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>700</width>
+    <height>570</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>600</width>
     <height>500</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>2100</width>
-    <height>1800</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -366,14 +360,14 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QCheckBox" name="checkBox">
+        <widget class="QCheckBox" name="HEXReceiveCheckBox">
          <property name="text">
           <string>十六进制显示</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_2">
+        <widget class="QCheckBox" name="ReceivePauseCheckBox">
          <property name="text">
           <string>暂停接收显示</string>
          </property>
@@ -414,7 +408,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QCheckBox" name="checkBox_4">
+        <widget class="QCheckBox" name="SendHEXCheckBox">
          <property name="text">
           <string>十六进制发送</string>
          </property>
