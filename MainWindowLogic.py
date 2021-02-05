@@ -26,14 +26,15 @@ class QmyWidget(QWidget):
         self.ReceiveCounter = 0
 
         self.counter_signal.connect(self.counter_signal_handler)
-        self.__ui.ConnectButton.toggled.connect(self.connect_button_toggled_slot)
-        self.__ui.SendButton.clicked.connect(self.send_link)
+        self.__ui.ConnectButton.toggled.connect(self.connect_button_toggled_handler)
+        self.__ui.SendButton.clicked.connect(self.send_link_handler)
         self.__ui.RSaveDataButton.clicked.connect(self.r_save_data_button_handler)
         self.__ui.CounterResetLabel.clicked.connect(self.counter_reset_button_handler)
+        self.__ui.ReceivePauseCheckBox.toggled.connect(self.receive_pause_checkbox_toggled_handler)
 
-    def connect_button_toggled_slot(self, state):
+    def connect_button_toggled_handler(self, state):
         if state:
-            self.click_link()
+            self.click_link_handler()
         else:
             self.click_disconnect()
             self.editable(True)
@@ -45,13 +46,13 @@ class QmyWidget(QWidget):
         self.__ui.TargetIPLineEdit.setReadOnly(not able)
         self.__ui.TargetPortLineEdit.setReadOnly(not able)
 
-    def click_link(self):
+    def click_link_handler(self):
         """
         ConnectButton控件点击触发的槽
         :return: None
         """
         server_flag = False  # 如果没有输入目标IP与端口号，则作为Server使用
-        protocol_type_index = self.__ui.ProtocolTypeComboBox.currentIndex()
+        protocol_type_text = self.__ui.ProtocolTypeComboBox.currentText()
         target_ip = str(self.__ui.TargetIPLineEdit.text())
 
         def get_int_port(port):
@@ -67,6 +68,7 @@ class QmyWidget(QWidget):
         elif target_port == -1 and target_ip != '':
             mb = QMessageBox(QMessageBox.Critical, 'Client启动错误', '请输入目标端口号', QMessageBox.Ok, self)
             mb.open()
+            # TODO 把MessageBox 改为 InputDialog
             self.__ui.ConnectButton.setChecked(False)
             self.editable(True)
             # 提前终止槽函数
@@ -79,24 +81,24 @@ class QmyWidget(QWidget):
             # 提前终止槽函数
             return None
 
-        if protocol_type_index == 0 and server_flag:
+        if protocol_type_text == "TCP" and server_flag:
             self.link_signal.emit((self.ServerTCP, '', my_port))
             self.link_flag = self.ServerTCP
             self.__ui.StateLabel.setText("TCP服务端")
-        elif protocol_type_index == 0 and not server_flag:
+        elif protocol_type_text == "TCP" and not server_flag:
             self.link_signal.emit((self.ClientTCP, target_ip, target_port))
             self.link_flag = self.ClientTCP
             self.__ui.StateLabel.setText("TCP客户端")
-        elif protocol_type_index == 1 and server_flag:
+        elif protocol_type_text == "UDP" and server_flag:
             self.link_signal.emit((self.ServerUDP, '', my_port))
             self.link_flag = self.ServerUDP
             self.__ui.StateLabel.setText("UDP服务端")
-        elif protocol_type_index == 1 and not server_flag:
+        elif protocol_type_text == "UDP" and not server_flag:
             self.link_signal.emit((self.ClientUDP, target_ip, target_port))
             self.link_flag = self.ClientUDP
             self.__ui.StateLabel.setText("UDP客户端")
 
-    def send_link(self):
+    def send_link_handler(self):
         """
         SendButton控件点击触发的槽
         :return: None
@@ -148,8 +150,23 @@ class QmyWidget(QWidget):
         """
         text = self.__ui.ReceivePlainTextEdit.toPlainText()
         file_name = QFileDialog.getSaveFileName(self, "保存到txt", "./", "ALL(*, *);;txt文件(*.txt)", "txt文件(*.txt)")[0]
-        with open(file_name, mode='w') as f:
-            f.write(text)
+        try:
+            with open(file_name, mode='w') as f:
+                f.write(text)
+        except FileNotFoundError:
+            pass  # 如果用户取消输入，filename为空，会出现FileNotFoundError
+
+    def receive_pause_checkbox_toggled_handler(self, ste: bool):
+        """
+        暂停接受复选框的槽函数
+        :return: None
+        """
+        pass
+        # TODO 实现暂停接收功能
+        if ste:
+            pass  # 暂时断开ReceivePlainTextEdit连接的信号
+        else:
+            self.__ui.ReceivePlainTextEdit.blockSignals(False)  # 恢复连接
 
     # TODO 最小化到托盘
 
