@@ -9,6 +9,7 @@ from Network import StopThreading
 
 class TcpLogic:
     tcp_signal_write_msg = pyqtSignal(str)
+    # TODO 数据与提示信息分离
 
     def __init__(self):
         self.tcp_socket = None
@@ -16,7 +17,7 @@ class TcpLogic:
         self.client_th = None
         self.client_socket_list = list()
 
-        self.link_flag = -1  # 用于标记是否开启了连接
+        self.link_flag = self.NoLink  # 用于标记是否开启了连接
 
     def tcp_server_start(self, port):
         """
@@ -52,7 +53,7 @@ class TcpLogic:
             try:
                 client_socket, client_address = self.tcp_socket.accept()
             except Exception as ret:
-                sleep(0.001)
+                sleep(0.002)
             else:
                 client_socket.setblocking(False)
                 # 将创建的客户端套接字存入列表,client_address为ip和端口的元组
@@ -122,19 +123,19 @@ class TcpLogic:
         功能函数，用于TCP服务端和TCP客户端发送消息
         :return: None
         """
-        if self.link_flag == -1:
+        if self.link_flag == self.NoLink:
             msg = '请选择服务，并点击连接网络\n'
             self.tcp_signal_write_msg.emit(msg)
         else:
             try:
                 send_msg = send_msg.encode('utf-8')
-                if self.link_flag == 0:
+                if self.link_flag == self.ServerTCP:
                     # 向所有连接的客户端发送消息
                     for client, address in self.client_socket_list:
                         client.send(send_msg)
                     msg = 'TCP服务端已发送\n'
                     self.tcp_signal_write_msg.emit(msg)
-                if self.link_flag == 1:
+                if self.link_flag == self.ClientTCP:
                     self.tcp_socket.send(send_msg)
                     msg = 'TCP客户端已发送\n'
                     self.tcp_signal_write_msg.emit(msg)
@@ -155,7 +156,7 @@ class TcpLogic:
                 msg = '已断开网络\n'
                 self.tcp_signal_write_msg.emit(msg)
             except Exception as ret:
-                print(ret)
+                pass
 
         elif self.link_flag == self.ClientTCP:
             try:
@@ -163,15 +164,15 @@ class TcpLogic:
                 msg = '已断开网络\n'
                 self.tcp_signal_write_msg.emit(msg)
             except Exception as ret:
-                print(ret)
+                pass
         try:
             StopThreading.stop_thread(self.sever_th)
         except Exception as ret:
-            print(ret)
+            pass
         try:
             StopThreading.stop_thread(self.client_th)
         except Exception as ret:
-            print(ret)
+            pass
 
     NoLink = -1
     ServerTCP = 0
