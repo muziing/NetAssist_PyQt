@@ -63,6 +63,14 @@ class QmyWidget(QWidget):
         target_port = get_int_port(self.__ui.TargetPortLineEdit.text())
         self.editable(False)  # 建立连接后不可再修改参数
 
+        # TODO 对用户同时输入了本机IP目标IP目标端口的情况进行异常处理
+
+        if my_port == -1 and target_port == -1 and target_ip == '':
+            mb = QMessageBox(QMessageBox.Critical, '错误', '请输入信息', QMessageBox.Ok, self)
+            mb.open()
+            self.editable(True)
+            self.__ui.ConnectButton.setChecked(False)
+            return None
         if target_port == -1 and target_ip == '':
             server_flag = True
         elif target_port == -1 and target_ip != '':
@@ -93,6 +101,7 @@ class QmyWidget(QWidget):
             self.link_signal.emit((self.ServerUDP, '', my_port))
             self.link_flag = self.ServerUDP
             self.__ui.StateLabel.setText("UDP服务端")
+            # TODO 作为UDP服务端时禁用发送
         elif protocol_type_text == "UDP" and not server_flag:
             self.link_signal.emit((self.ClientUDP, target_ip, target_port))
             self.link_flag = self.ClientUDP
@@ -129,7 +138,7 @@ class QmyWidget(QWidget):
 
     def click_disconnect(self):
         self.disconnect_signal.emit()
-        self.link_flag = -1
+        self.link_flag = self.NoLink
         self.__ui.StateLabel.setText("未连接")
 
     def counter_signal_handler(self, send_count, receive_count):
@@ -175,3 +184,12 @@ class QmyWidget(QWidget):
     ClientTCP = 1
     ServerUDP = 2
     ClientUDP = 3
+
+
+if __name__ == '__main__':
+    import sys
+    from PyQt5.QtWidgets import QApplication
+    app = QApplication(sys.argv)
+    window = QmyWidget()
+    window.show()
+    sys.exit(app.exec_())
