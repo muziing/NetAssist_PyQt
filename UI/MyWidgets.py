@@ -19,11 +19,16 @@ class PortLineEdit(QLineEdit):
 
 
 class IPv4AddrLineEdit(QLineEdit):
+    """
+    带有验证输入IPv4地址功能的LineEdit
+    """
     class IPValidator(QRegExpValidator):
         def validate(self, inputs: str, pos: int) -> [QValidator.State, str, int]:
+            # 重写validate方法以实现可以自动把中文句号转化为英文句点的功能
             inputs = inputs.replace('。', '.')
             return super().validate(inputs, pos)
 
+    # 一串神秘的正则表达式，可以验证IPv4类型的地址
     reg_ex = QRegExp("((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)")
 
     def __init__(self, parent=None):
