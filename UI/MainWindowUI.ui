@@ -435,7 +435,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>循环时间(ms)</string>
+            <string>循环时间</string>
            </property>
           </widget>
          </item>
@@ -452,6 +452,9 @@
              <width>68</width>
              <height>0</height>
             </size>
+           </property>
+           <property name="suffix">
+            <string> ms</string>
            </property>
            <property name="minimum">
             <number>1</number>
