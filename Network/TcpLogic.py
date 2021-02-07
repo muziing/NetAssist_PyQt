@@ -29,18 +29,13 @@ class TcpLogic:
         self.tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         # 设定套接字为非阻塞式
         self.tcp_socket.setblocking(False)
-        try:
-            port = int(port)
-            self.tcp_socket.bind(('', port))
-        except Exception as ret:
-            msg = '请检查端口号\n'
-            self.tcp_signal_write_msg.emit(msg)
-        else:
-            self.tcp_socket.listen()
-            self.sever_th = threading.Thread(target=self.tcp_server_concurrency)
-            self.sever_th.start()
-            msg = 'TCP服务端正在监听端口:%s\n' % str(port)
-            self.tcp_signal_write_msg.emit(msg)
+        port = int(port)
+        self.tcp_socket.bind(('', port))
+        self.tcp_socket.listen()
+        self.sever_th = threading.Thread(target=self.tcp_server_concurrency)
+        self.sever_th.start()
+        msg = 'TCP服务端正在监听端口:%s\n' % str(port)
+        self.tcp_signal_write_msg.emit(msg)
 
     def tcp_server_concurrency(self):
         """
@@ -81,24 +76,19 @@ class TcpLogic:
         :return:
         """
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        address = (str(ip), int(port))
         try:
-            address = (str(ip), int(port))
+            msg = '正在连接目标服务器\n'
+            self.tcp_signal_write_msg.emit(msg)
+            self.tcp_socket.connect(address)
         except Exception as ret:
-            msg = '请检查目标IP，目标端口\n'
+            msg = '无法连接目标服务器\n'
             self.tcp_signal_write_msg.emit(msg)
         else:
-            try:
-                msg = '正在连接目标服务器\n'
-                self.tcp_signal_write_msg.emit(msg)
-                self.tcp_socket.connect(address)
-            except Exception as ret:
-                msg = '无法连接目标服务器\n'
-                self.tcp_signal_write_msg.emit(msg)
-            else:
-                self.client_th = threading.Thread(target=self.tcp_client_concurrency, args=(address,))
-                self.client_th.start()
-                msg = 'TCP客户端已连接IP:%s端口:%s\n' % address
-                self.tcp_signal_write_msg.emit(msg)
+            self.client_th = threading.Thread(target=self.tcp_client_concurrency, args=(address,))
+            self.client_th.start()
+            msg = 'TCP客户端已连接IP:%s端口:%s\n' % address
+            self.tcp_signal_write_msg.emit(msg)
 
     def tcp_client_concurrency(self, address):
         """
@@ -123,25 +113,21 @@ class TcpLogic:
         功能函数，用于TCP服务端和TCP客户端发送消息
         :return: None
         """
-        if self.link_flag == self.NoLink:
-            msg = '请选择服务，并点击连接网络\n'
-            self.tcp_signal_write_msg.emit(msg)
-        else:
-            try:
-                send_msg = send_msg.encode('utf-8')
-                if self.link_flag == self.ServerTCP:
-                    # 向所有连接的客户端发送消息
-                    for client, address in self.client_socket_list:
-                        client.send(send_msg)
-                    msg = 'TCP服务端已发送\n'
-                    self.tcp_signal_write_msg.emit(msg)
-                if self.link_flag == self.ClientTCP:
-                    self.tcp_socket.send(send_msg)
-                    msg = 'TCP客户端已发送\n'
-                    self.tcp_signal_write_msg.emit(msg)
-            except Exception as ret:
-                msg = '发送失败\n'
+        try:
+            send_msg = send_msg.encode('utf-8')
+            if self.link_flag == self.ServerTCP:
+                # 向所有连接的客户端发送消息
+                for client, address in self.client_socket_list:
+                    client.send(send_msg)
+                msg = 'TCP服务端已发送\n'
                 self.tcp_signal_write_msg.emit(msg)
+            if self.link_flag == self.ClientTCP:
+                self.tcp_socket.send(send_msg)
+                msg = 'TCP客户端已发送\n'
+                self.tcp_signal_write_msg.emit(msg)
+        except Exception as ret:
+            msg = '发送失败\n'
+            self.tcp_signal_write_msg.emit(msg)
 
     def tcp_close(self):
         """
@@ -158,6 +144,11 @@ class TcpLogic:
             except Exception as ret:
                 pass
 
+            try:
+                StopThreading.stop_thread(self.sever_th)
+            except Exception as ret:
+                pass
+
         elif self.link_flag == self.ClientTCP:
             try:
                 self.tcp_socket.close()
@@ -165,14 +156,11 @@ class TcpLogic:
                 self.tcp_signal_write_msg.emit(msg)
             except Exception as ret:
                 pass
-        try:
-            StopThreading.stop_thread(self.sever_th)
-        except Exception as ret:
-            pass
-        try:
-            StopThreading.stop_thread(self.client_th)
-        except Exception as ret:
-            pass
+
+            try:
+                StopThreading.stop_thread(self.client_th)
+            except Exception as ret:
+                pass
 
     NoLink = -1
     ServerTCP = 0

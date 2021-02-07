@@ -19,6 +19,7 @@ def get_host_ip() -> str:
 
 class UdpLogic:
     udp_signal_write_msg = pyqtSignal(str)
+    # TODO 数据与提交信息分离
 
     def __init__(self):
         self.link_flag = False
@@ -33,18 +34,13 @@ class UdpLogic:
         :return:
         """
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
-            port = int(port)
-            address = ('', port)
-            self.udp_socket.bind(address)
-        except Exception as ret:
-            msg = '请检查端口号\n'
-            self.udp_signal_write_msg.emit(msg)
-        else:
-            self.sever_th = threading.Thread(target=self.udp_server_concurrency)
-            self.sever_th.start()
-            msg = 'UDP服务端正在监听端口:{}\n'.format(port)
-            self.udp_signal_write_msg.emit(msg)
+        port = int(port)
+        address = ('', port)
+        self.udp_socket.bind(address)
+        self.sever_th = threading.Thread(target=self.udp_server_concurrency)
+        self.sever_th.start()
+        msg = 'UDP服务端正在监听端口:{}\n'.format(port)
+        self.udp_signal_write_msg.emit(msg)
 
     def udp_server_concurrency(self):
         """
@@ -63,32 +59,23 @@ class UdpLogic:
         :return:
         """
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
-            self.address = (str(ip), int(port))
-        except Exception as ret:
-            msg = '请检查目标IP，目标端口\n'
-            self.udp_signal_write_msg.emit(msg)
-        else:
-            msg = 'UDP客户端已启动\n'
-            self.udp_signal_write_msg.emit(msg)
+        self.address = (str(ip), int(port))
+        msg = 'UDP客户端已启动\n'
+        self.udp_signal_write_msg.emit(msg)
 
     def udp_send(self, send_msg):
         """
         功能函数，用于UDP客户端发送消息
         :return: None
         """
-        if self.link_flag == -1:
-            msg = '请选择服务，并点击连接网络\n'
+        try:
+            send_msg = send_msg.encode('utf-8')
+            self.udp_socket.sendto(send_msg, self.address)
+            msg = 'UDP客户端已发送\n'
             self.udp_signal_write_msg.emit(msg)
-        else:
-            try:
-                send_msg = send_msg.encode('utf-8')
-                self.udp_socket.sendto(send_msg, self.address)
-                msg = 'UDP客户端已发送\n'
-                self.udp_signal_write_msg.emit(msg)
-            except Exception as ret:
-                msg = '发送失败\n'
-                self.udp_signal_write_msg.emit(msg)
+        except Exception as ret:
+            msg = '发送失败\n'
+            self.udp_signal_write_msg.emit(msg)
 
     def udp_close(self):
         """
@@ -103,6 +90,11 @@ class UdpLogic:
             except Exception as ret:
                 pass
 
+            try:
+                StopThreading.stop_thread(self.sever_th)
+            except Exception:
+                pass
+
         if self.link_flag == self.ClientUDP:
             try:
                 self.udp_socket.close()
@@ -110,14 +102,11 @@ class UdpLogic:
                 self.udp_signal_write_msg.emit(msg)
             except Exception as ret:
                 pass
-        try:
-            StopThreading.stop_thread(self.sever_th)
-        except Exception:
-            pass
-        try:
-            StopThreading.stop_thread(self.client_th)
-        except Exception:
-            pass
+
+            try:
+                StopThreading.stop_thread(self.client_th)
+            except Exception:
+                pass
 
     NoLink = -1
     ServerUDP = 2
