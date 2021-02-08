@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog
 
-from Network.UdpLogic import get_host_ip
+from Network import get_host_ip
 from UI import MainWindowUI
 
 
@@ -126,7 +126,7 @@ class QmyWidget(QWidget):
 
             # TODO 十六进制发送
 
-    def msg_write(self, msg):
+    def msg_write(self, msg: str):
         """
         将接收到的消息写入ReceivePlainTextEdit
         :return: None
