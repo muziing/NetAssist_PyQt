@@ -19,7 +19,7 @@ class TcpLogic:
 
         self.link_flag = self.NoLink  # 用于标记是否开启了连接
 
-    def tcp_server_start(self, port):
+    def tcp_server_start(self, port: int):
         """
         功能函数，TCP服务端开启的方法
         :return: None
@@ -29,9 +29,8 @@ class TcpLogic:
         self.tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         # 设定套接字为非阻塞式
         self.tcp_socket.setblocking(False)
-        port = int(port)
         self.tcp_socket.bind(('', port))
-        self.tcp_socket.listen()
+        self.tcp_socket.listen(5)  # 限制最大连接数
         self.sever_th = threading.Thread(target=self.tcp_server_concurrency)
         self.sever_th.start()
         msg = 'TCP服务端正在监听端口:%s\n' % str(port)
@@ -58,7 +57,7 @@ class TcpLogic:
             # 轮询客户端套接字列表，接收数据
             for client, address in self.client_socket_list:
                 try:
-                    recv_msg = client.recv(1024)
+                    recv_msg = client.recv(4096)
                 except Exception as ret:
                     pass
                 else:
@@ -70,13 +69,13 @@ class TcpLogic:
                         client.close()
                         self.client_socket_list.remove((client, address))
 
-    def tcp_client_start(self, ip, port):
+    def tcp_client_start(self, ip: str, port: int):
         """
         功能函数，TCP客户端连接其他服务端的方法
         :return:
         """
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        address = (str(ip), int(port))
+        address = (ip, port)
         try:
             msg = '正在连接目标服务器\n'
             self.tcp_signal_write_msg.emit(msg)
@@ -90,25 +89,24 @@ class TcpLogic:
             msg = 'TCP客户端已连接IP:%s端口:%s\n' % address
             self.tcp_signal_write_msg.emit(msg)
 
-    def tcp_client_concurrency(self, address):
+    def tcp_client_concurrency(self, address) -> None:
         """
         功能函数，用于TCP客户端创建子线程的方法，阻塞式接收
-        :return:
+        :return: None
         """
         while True:
-            recv_msg = self.tcp_socket.recv(1024)
+            recv_msg = self.tcp_socket.recv(4096)
             if recv_msg:
                 msg = recv_msg.decode('utf-8')
                 msg = '来自IP:{}端口:{}:\n{}\n'.format(address[0], address[1], msg)
                 self.tcp_signal_write_msg.emit(msg)
             else:
                 self.tcp_socket.close()
-                # self.reset()
                 msg = '从服务器断开连接\n'
                 self.tcp_signal_write_msg.emit(msg)
                 break
 
-    def tcp_send(self, send_msg):
+    def tcp_send(self, send_msg: str) -> None:
         """
         功能函数，用于TCP服务端和TCP客户端发送消息
         :return: None
@@ -129,15 +127,18 @@ class TcpLogic:
             msg = '发送失败\n'
             self.tcp_signal_write_msg.emit(msg)
 
-    def tcp_close(self):
+    def tcp_close(self) -> None:
         """
         功能函数，关闭网络连接的方法
-        :return:
+        :return: None
         """
         if self.link_flag == self.ServerTCP:
             try:
                 for client, address in self.client_socket_list:
+                    client.shutdown(2)
                     client.close()
+                self.client_socket_list = list()  # 把已连接的客户端列表重新置为空列表
+                self.tcp_socket.shutdown(2)
                 self.tcp_socket.close()
                 msg = '已断开网络\n'
                 self.tcp_signal_write_msg.emit(msg)
@@ -151,6 +152,7 @@ class TcpLogic:
 
         elif self.link_flag == self.ClientTCP:
             try:
+                self.tcp_socket.shutdown(2)
                 self.tcp_socket.close()
                 msg = '已断开网络\n'
                 self.tcp_signal_write_msg.emit(msg)
