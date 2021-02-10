@@ -16,7 +16,6 @@ class TcpLogic:
         self.sever_th = None
         self.client_th = None
         self.client_socket_list = list()
-
         self.link_flag = self.NoLink  # 用于标记是否开启了连接
 
     def tcp_server_start(self, port: int):
@@ -115,10 +114,11 @@ class TcpLogic:
             send_msg = send_msg.encode('utf-8')
             if self.link_flag == self.ServerTCP:
                 # 向所有连接的客户端发送消息
-                for client, address in self.client_socket_list:
-                    client.send(send_msg)
-                msg = 'TCP服务端已发送\n'
-                self.tcp_signal_write_msg.emit(msg)
+                if self.client_socket_list:
+                    for client, address in self.client_socket_list:
+                        client.send(send_msg)
+                    msg = 'TCP服务端已发送\n'
+                    self.tcp_signal_write_msg.emit(msg)
             if self.link_flag == self.ClientTCP:
                 self.tcp_socket.send(send_msg)
                 msg = 'TCP客户端已发送\n'
@@ -133,17 +133,13 @@ class TcpLogic:
         :return: None
         """
         if self.link_flag == self.ServerTCP:
-            try:
-                for client, address in self.client_socket_list:
-                    client.shutdown(2)
-                    client.close()
-                self.client_socket_list = list()  # 把已连接的客户端列表重新置为空列表
-                self.tcp_socket.shutdown(2)
-                self.tcp_socket.close()
-                msg = '已断开网络\n'
-                self.tcp_signal_write_msg.emit(msg)
-            except Exception as ret:
-                pass
+            for client, address in self.client_socket_list:
+                client.shutdown(2)
+                client.close()
+            self.client_socket_list = list()  # 把已连接的客户端列表重新置为空列表
+            self.tcp_socket.close()
+            msg = '已断开网络\n'
+            self.tcp_signal_write_msg.emit(msg)
 
             try:
                 StopThreading.stop_thread(self.sever_th)
