@@ -8,6 +8,7 @@ from Network import StopThreading
 
 
 class TcpLogic:
+    tcp_signal_write_info = pyqtSignal(str)
     tcp_signal_write_msg = pyqtSignal(str)
     # TODO 数据与提示信息分离
 
@@ -32,8 +33,8 @@ class TcpLogic:
         self.tcp_socket.listen(5)  # 限制最大连接数
         self.sever_th = threading.Thread(target=self.tcp_server_concurrency)
         self.sever_th.start()
-        msg = 'TCP服务端正在监听端口:%s\n' % str(port)
-        self.tcp_signal_write_msg.emit(msg)
+        info = 'TCP服务端正在监听端口:%s\n' % str(port)
+        self.tcp_signal_write_info.emit(info)
 
     def tcp_server_concurrency(self):
         """
@@ -51,8 +52,9 @@ class TcpLogic:
                 client_socket.setblocking(False)
                 # 将创建的客户端套接字存入列表,client_address为ip和端口的元组
                 self.client_socket_list.append((client_socket, client_address))
-                msg = 'TCP服务端已连接IP:%s端口:%s\n' % client_address
-                self.tcp_signal_write_msg.emit(msg)
+                print(client_address)
+                info = f'TCP服务端已连接IP:{client_address[0]}端口:{client_address[1]}\n'
+                self.tcp_signal_write_msg.emit(info)
             # 轮询客户端套接字列表，接收数据
             for client, address in self.client_socket_list:
                 try:
