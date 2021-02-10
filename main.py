@@ -36,8 +36,10 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
         断开连接的槽函数
         :return: None
         """
-        self.tcp_close()
-        self.udp_close()
+        if self.link_flag == self.ServerTCP or self.link_flag == self.ClientTCP:
+            self.tcp_close()
+        elif self.link_flag == self.ServerUDP or self.link_flag == self.ClientUDP:
+            self.udp_close()
 
     def send_signal_handler(self, msg):
         """
@@ -51,7 +53,6 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
             self.udp_send(msg)
             self.SendCounter += 1
         self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
-        # TODO 支持GBK中文编码
 
     def closeEvent(self, event) -> None:
         """
