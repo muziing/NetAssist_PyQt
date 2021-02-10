@@ -12,10 +12,10 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic, WebLogic):
         self.link_signal.connect(self.link_signal_handler)
         self.disconnect_signal.connect(self.disconnect_signal_handler)
         self.send_signal.connect(self.send_signal_handler)
-        self.tcp_signal_write_info.connect(self.info_write)
         self.tcp_signal_write_msg.connect(self.msg_write)
-        self.udp_signal_write_info.connect(self.info_write)
+        self.tcp_signal_write_info.connect(self.info_write)
         self.udp_signal_write_msg.connect(self.msg_write)
+        self.udp_signal_write_info.connect(self.info_write)
 
     def link_signal_handler(self, signal):
         """
@@ -45,6 +45,7 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic, WebLogic):
             self.udp_close()
         elif self.link_flag == self.WebServer:
             self.web_close()
+            # TODO 解决Webserver线程无法正常关闭问题
 
     def send_signal_handler(self, msg):
         """
