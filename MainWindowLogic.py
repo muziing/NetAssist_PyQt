@@ -22,6 +22,7 @@ class QmyWidget(QWidget):
         self.__ui.MyHostAddrLineEdit.setText(get_host_ip())
 
         self.link_flag = self.NoLink
+        self.receive_flag = True
         self.SendCounter = 0
         self.ReceiveCounter = 0
 
@@ -131,10 +132,11 @@ class QmyWidget(QWidget):
         将接收到的消息写入ReceivePlainTextEdit
         :return: None
         """
-        self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
-        self.ReceiveCounter += 1
-        self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
-        # TODO 十六进制接收
+        if self.receive_flag:
+            self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
+            self.ReceiveCounter += 1
+            self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
+            # TODO 十六进制接收
 
     def click_disconnect(self):
         self.disconnect_signal.emit()
@@ -170,12 +172,10 @@ class QmyWidget(QWidget):
         暂停接受复选框的槽函数
         :return: None
         """
-        pass
-        # TODO 实现暂停接收功能
         if ste:
-            pass  # 暂时断开ReceivePlainTextEdit连接的信号
+            self.receive_flag = False
         else:
-            self.__ui.ReceivePlainTextEdit.blockSignals(False)  # 恢复连接
+            self.receive_flag = True
 
     # TODO 最小化到托盘
 
