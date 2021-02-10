@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>720</width>
-    <height>600</height>
+    <width>700</width>
+    <height>570</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -365,43 +365,10 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QCheckBox" name="checkBox">
-           <property name="text">
-            <string>UTF8</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">RButtonGroup</string>
-           </attribute>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_2">
-           <property name="text">
-            <string>GBK</string>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">RButtonGroup</string>
-           </attribute>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
         <widget class="QCheckBox" name="HEXReceiveCheckBox">
          <property name="text">
           <string>HEX(暂不支持)</string>
          </property>
-         <attribute name="buttonGroup">
-          <string notr="true">RButtonGroup</string>
-         </attribute>
         </widget>
        </item>
        <item>
@@ -446,43 +413,10 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QCheckBox" name="checkBox_3">
-           <property name="text">
-            <string>UTF8</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">SButtonGroup</string>
-           </attribute>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_4">
-           <property name="text">
-            <string>GBK</string>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">SButtonGroup</string>
-           </attribute>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
         <widget class="QCheckBox" name="SendHEXCheckBox">
          <property name="text">
           <string>HEX(暂不支持)</string>
          </property>
-         <attribute name="buttonGroup">
-          <string notr="true">SButtonGroup</string>
-         </attribute>
         </widget>
        </item>
        <item>
@@ -848,8 +782,4 @@
    </hints>
   </connection>
  </connections>
- <buttongroups>
-  <buttongroup name="SButtonGroup"/>
-  <buttongroup name="RButtonGroup"/>
- </buttongroups>
 </ui>
