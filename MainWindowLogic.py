@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer
-from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QInputDialog
+from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog
 
 from Network import get_host_ip
 from UI import MainWindowUI
@@ -137,9 +137,10 @@ class QmyWidget(QWidget):
 
     def info_write(self, info: str):
         """
-        将接收到的消息写入ReceivePlainTextEdit
+        将提示消息写入ReceivePlainTextEdit
         :return: None
         """
+        # TODO 显示接收时间
         if self.receive_flag:
             self.__ui.ReceivePlainTextEdit.appendPlainText(info)
 
@@ -153,6 +154,9 @@ class QmyWidget(QWidget):
             self.__ui.ReceivePlainTextEdit.appendHtml('\n')
             self.ReceiveCounter += 1
             self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
+        else:
+            self.ReceiveCounter += 1
+            self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
 
     def click_disconnect(self):
         self.disconnect_signal.emit()
@@ -162,8 +166,6 @@ class QmyWidget(QWidget):
     def counter_signal_handler(self, send_count, receive_count):
         self.__ui.SendCounterLabel.setText(str(send_count))
         self.__ui.ReceiveCounterLabel.setText(str(receive_count))
-
-    # TODO 发送接收计数器
 
     def counter_reset_button_handler(self):
         self.SendCounter = 0
