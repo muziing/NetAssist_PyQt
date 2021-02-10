@@ -10,12 +10,12 @@ from Network import StopThreading
 
 
 class WebLogic:
-    signal_write_info = pyqtSignal(str)
+    signal_write_msg = pyqtSignal(str)
 
     def __init__(self):
         self.tcp_socket = None
         self.sever_th = None
-        self.__dir = None
+        self.dir = None
         self.client_socket_list = list()
 
     def web_server_start(self, port: int):
@@ -31,14 +31,14 @@ class WebLogic:
         try:
             self.tcp_socket.bind(('', port))
         except Exception as ret:
-            info = '请检查端口号\n'
-            self.signal_write_info.emit(info)
+            msg = '请检查端口号\n'
+            self.signal_write_msg.emit(msg)
         else:
             self.tcp_socket.listen()
             self.sever_th = threading.Thread(target=self.web_server_concurrency)
             self.sever_th.start()
             msg = 'WEB服务端正在监听端口:%s\n' % str(port)
-            self.signal_write_info.emit(msg)
+            self.signal_write_msg.emit(msg)
 
     def web_server_concurrency(self):
         """
@@ -57,7 +57,7 @@ class WebLogic:
                 # 将创建的客户端套接字存入列表
                 self.client_socket_list.append((client_socket, client_address))
                 msg = f'WEB服务端已连接浏览器，IP:{client_address[0]}端口:{client_address[1]}\n'
-                self.signal_write_info.emit(msg)
+                self.signal_write_msg.emit(msg)
             # 轮询客户端套接字列表，接收数据
             for client, address in self.client_socket_list:
                 try:
@@ -71,7 +71,7 @@ class WebLogic:
                         msg_dir = re.match(r"[^/]+(/[^ ]*)", msg_lines[0])
                         msg_dir = msg_dir.group(1)
                         msg = '来自IP:{}端口:{}:\n请求路径:{}\n'.format(address[0], address[1], msg_dir)
-                        self.signal_write_info.emit(msg)
+                        self.signal_write_msg.emit(msg)
                         self.web_send(client, msg_dir)
                     else:
                         client.close()
@@ -83,9 +83,9 @@ class WebLogic:
         保存到self.dir中，并显示出来
         :return:
         """
-        self.__dir = QFileDialog.getExistingDirectory(self, "获取文件夹路径", './')
-        if self.__dir:
-            self.label_dir.setText(self._translate("TCP-UDP", "%s" % self.__dir))
+        self.dir = QFileDialog.getExistingDirectory(self, "获取文件夹路径", './')
+        if self.dir:
+            self.label_dir.setText(self._translate("TCP-UDP", "%s" % self.dir))
 
     def web_send_msg(self, msg_dir):
         """
@@ -96,9 +96,9 @@ class WebLogic:
         # 指定主页路径
         if str(msg_dir) == '/':
             msg_dir = '/index.html'
-            dir = str(self.__dir) + str(msg_dir)
+            dir = str(self.dir) + str(msg_dir)
         else:
-            dir = str(self.__dir) + str(msg_dir)
+            dir = str(self.dir) + str(msg_dir)
 
         # 根据返回文件的类型，制作相应的Content-Type数据
         file_header = self.web_file_header(msg_dir)
@@ -159,11 +159,11 @@ class WebLogic:
             client.send(header)
             client.send(body)
             msg = 'WEB服务端已回复\n'
-            self.signal_write_info.emit(msg)
+            self.signal_write_msg.emit(msg)
         except Exception as ret:
             print(ret)
             msg = '发送失败\n'
-            self.signal_write_info.emit(msg)
+            self.signal_write_msg.emit(msg)
 
     def web_close(self):
         """
@@ -175,7 +175,7 @@ class WebLogic:
                 client.close()
             self.tcp_socket.close()
             msg = '已断开网络\n'
-            self.signal_write_info.emit(msg)
+            self.signal_write_msg.emit(msg)
         except Exception as ret:
             pass
         try:

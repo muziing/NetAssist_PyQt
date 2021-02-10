@@ -135,22 +135,22 @@ class QmyWidget(QWidget):
                 self.__ui.LoopSendCheckBox.stateChanged.connect(lambda val: send_timer.stop() if val == 0 else None)
                 self.__ui.ConnectButton.toggled.connect(lambda val: None if val else send_timer.stop())
 
-    def info_write(self, info: str):
+    def msg_write(self, msg: str):
         """
         将提示消息写入ReceivePlainTextEdit
         :return: None
         """
         # TODO 显示接收时间
         if self.receive_flag:
-            self.__ui.ReceivePlainTextEdit.appendPlainText(info)
+            self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
 
-    def msg_write(self, msg: str):
+    def info_write(self, info: str):
         """
         将接收到的消息写入ReceivePlainTextEdit
         :return: None
         """
         if self.receive_flag:
-            self.__ui.ReceivePlainTextEdit.appendHtml(f'<font color="blue">{msg}</font>')
+            self.__ui.ReceivePlainTextEdit.appendHtml(f'<font color="blue">{info}</font>')
             self.__ui.ReceivePlainTextEdit.appendHtml('\n')
             self.ReceiveCounter += 1
             self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
@@ -173,7 +173,27 @@ class QmyWidget(QWidget):
         self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
 
     def open_file_handler(self):
-        pass
+        if self.link_flag in [self.ServerTCP, self.ClientTCP, self.ClientUDP]:
+            # 打开文本文件，加载到发送PlainTextEdit
+            def read_file(file_dir):
+                if file_dir:
+                    try:
+                        with open(file_dir, 'r', encoding='UTF8') as f:
+                            self.__ui.SendPlainTextEdit.clear()
+                            self.__ui.SendPlainTextEdit.appendPlainText(f.read())
+                    except UnicodeDecodeError:
+                        #  如果不能用UTF8解码
+                        mb = QMessageBox(QMessageBox.Critical, '无法读取文件', '无法读取文件，请检查输入', QMessageBox.Ok, self)
+                        mb.open()
+
+            fd = QFileDialog(self, "选择一个文件", "./", "文本文件(*, *)")
+            fd.setAcceptMode(QFileDialog.AcceptOpen)
+            fd.setFileMode(QFileDialog.ExistingFile)
+            fd.fileSelected.connect(read_file)
+            fd.open()
+
+        elif self.link_flag == self.WebServer:
+            pass
 
     def r_save_data_button_handler(self):
         """
@@ -211,6 +231,7 @@ class QmyWidget(QWidget):
 if __name__ == '__main__':
     import sys
     from PyQt5.QtWidgets import QApplication
+
     app = QApplication(sys.argv)
     window = QmyWidget()
     window.show()
