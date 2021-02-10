@@ -77,17 +77,17 @@ class TcpLogic:
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         address = (ip, port)
         try:
-            msg = '正在连接目标服务器\n'
-            self.tcp_signal_write_info.emit(msg)
+            info = '正在连接目标服务器\n'
+            self.tcp_signal_write_info.emit(info)
             self.tcp_socket.connect(address)
         except Exception as ret:
-            msg = '无法连接目标服务器\n'
-            self.tcp_signal_write_info.emit(msg)
+            info = '无法连接目标服务器\n'
+            self.tcp_signal_write_info.emit(info)
         else:
             self.client_th = threading.Thread(target=self.tcp_client_concurrency, args=(address,))
             self.client_th.start()
-            msg = 'TCP客户端已连接IP:%s端口:%s\n' % address
-            self.tcp_signal_write_info.emit(msg)
+            info = 'TCP客户端已连接IP:%s端口:%s\n' % address
+            self.tcp_signal_write_info.emit(info)
 
     def tcp_client_concurrency(self, address) -> None:
         """
@@ -97,8 +97,8 @@ class TcpLogic:
         while True:
             recv_msg = self.tcp_socket.recv(4096)
             if recv_msg:
-                msg = recv_msg.decode('utf-8') + '\n'
-                info = f'来自IP:{address[0]}端口:{address[1]}:\n'
+                msg = recv_msg.decode('utf-8')
+                info = f'来自IP:{address[0]}端口:{address[1]}:'
                 self.tcp_signal_write_info.emit(info)
                 self.tcp_signal_write_msg.emit(msg)
             else:
@@ -118,7 +118,11 @@ class TcpLogic:
                 # 向所有连接的客户端发送消息
                 if self.client_socket_list:
                     for client, address in self.client_socket_list:
-                        client.send(send_msg)
+                        try:
+                            client.send(send_msg)
+                        except Exception as ret:
+                            # 处理Client异常掉线的情况
+                            continue
                     info = 'TCP服务端已发送\n'
                     self.tcp_signal_write_info.emit(info)
             if self.link_flag == self.ClientTCP:
