@@ -1,8 +1,9 @@
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer
-from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QInputDialog
 
 from Network import get_host_ip
 from UI import MainWindowUI
+from UI.MyWidgets import PortInputDialog
 
 
 class QmyWidget(QWidget):
@@ -29,6 +30,7 @@ class QmyWidget(QWidget):
         self.counter_signal.connect(self.counter_signal_handler)
         self.__ui.ConnectButton.toggled.connect(self.connect_button_toggled_handler)
         self.__ui.SendButton.clicked.connect(self.send_link_handler)
+        self.__ui.OpenFilePushButton.clicked.connect(self.open_file_handler)
         self.__ui.RSaveDataButton.clicked.connect(self.r_save_data_button_handler)
         self.__ui.CounterResetLabel.clicked.connect(self.counter_reset_button_handler)
         self.__ui.ReceivePauseCheckBox.toggled.connect(self.receive_pause_checkbox_toggled_handler)
@@ -64,20 +66,26 @@ class QmyWidget(QWidget):
         target_port = get_int_port(self.__ui.TargetPortLineEdit.text())
         self.editable(False)  # 建立连接后不可再修改参数
 
-        # TODO 对用户同时输入了本机IP目标IP目标端口的情况进行异常处理
-
         if my_port == -1 and target_port == -1 and target_ip == '':
             mb = QMessageBox(QMessageBox.Critical, '错误', '请输入信息', QMessageBox.Ok, self)
             mb.open()
             self.editable(True)
             self.__ui.ConnectButton.setChecked(False)
             return None
-        if target_port == -1 and target_ip == '':
+        elif my_port != -1 and target_port != -1 and target_ip != '':
+            mb = QMessageBox(QMessageBox.Critical, '错误', '输入的信息过多', QMessageBox.Ok, self)
+            mb.open()
+            self.editable(True)
+            self.__ui.ConnectButton.setChecked(False)
+            return None
+        elif target_port == -1 and target_ip == '':
             server_flag = True
         elif target_port == -1 and target_ip != '':
-            mb = QMessageBox(QMessageBox.Critical, 'Client启动错误', '请输入目标端口号', QMessageBox.Ok, self)
-            mb.open()
-            # TODO 把MessageBox 改为 InputDialog
+            input_d = PortInputDialog(self)
+            input_d.setWindowTitle("服务启动失败")
+            input_d.setLabelText("请输入目标端口号作为Client启动，或取消")
+            input_d.intValueSelected.connect(lambda val: self.__ui.TargetPortLineEdit.setText(str(val)))
+            input_d.open()
             self.__ui.ConnectButton.setChecked(False)
             self.editable(True)
             # 提前终止槽函数
@@ -107,6 +115,8 @@ class QmyWidget(QWidget):
             self.link_signal.emit((self.ClientUDP, target_ip, target_port))
             self.link_flag = self.ClientUDP
             self.__ui.StateLabel.setText("UDP客户端")
+        elif protocol_type_text == "Web Server" and server_flag:
+            self.link_signal.emit((self.WebServer, '', my_port))
 
     def send_link_handler(self):
         """
@@ -120,12 +130,18 @@ class QmyWidget(QWidget):
                 self.send_signal.emit(send_msg)
             elif loop_flag == 2:
                 send_timer = QTimer(self)
-                send_timer.start(int(self.__ui.LoopSendSpinBox.text()))
+                send_timer.start(int(self.__ui.LoopSendSpinBox.value()))
                 send_timer.timeout.connect(lambda: self.send_signal.emit(send_msg))
                 self.__ui.LoopSendCheckBox.stateChanged.connect(lambda val: send_timer.stop() if val == 0 else None)
                 self.__ui.ConnectButton.toggled.connect(lambda val: None if val else send_timer.stop())
 
-            # TODO 十六进制发送
+    def info_write(self, info: str):
+        """
+        将接收到的消息写入ReceivePlainTextEdit
+        :return: None
+        """
+        if self.receive_flag:
+            self.__ui.ReceivePlainTextEdit.appendPlainText(info)
 
     def msg_write(self, msg: str):
         """
@@ -133,10 +149,10 @@ class QmyWidget(QWidget):
         :return: None
         """
         if self.receive_flag:
-            self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
+            self.__ui.ReceivePlainTextEdit.appendHtml(f'<font color="blue">{msg}</font>')
+            self.__ui.ReceivePlainTextEdit.appendHtml('\n')
             self.ReceiveCounter += 1
             self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
-            # TODO 十六进制接收
 
     def click_disconnect(self):
         self.disconnect_signal.emit()
@@ -153,6 +169,9 @@ class QmyWidget(QWidget):
         self.SendCounter = 0
         self.ReceiveCounter = 0
         self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
+
+    def open_file_handler(self):
+        pass
 
     def r_save_data_button_handler(self):
         """
@@ -184,6 +203,7 @@ class QmyWidget(QWidget):
     ClientTCP = 1
     ServerUDP = 2
     ClientUDP = 3
+    WebServer = 4
 
 
 if __name__ == '__main__':

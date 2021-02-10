@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QRegExp, pyqtSignal
 from PyQt5.QtGui import QIntValidator, QRegExpValidator, QValidator
-from PyQt5.QtWidgets import QLineEdit, QPushButton, QLabel
+from PyQt5.QtWidgets import QLineEdit, QPushButton, QLabel, QInputDialog
 
 
 class PortLineEdit(QLineEdit):
@@ -22,6 +22,7 @@ class IPv4AddrLineEdit(QLineEdit):
     """
     带有验证输入IPv4地址功能的LineEdit
     """
+
     class IPValidator(QRegExpValidator):
         def validate(self, inputs: str, pos: int) -> [QValidator.State, str, int]:
             # 重写validate方法以实现可以自动把中文句号转化为英文句点的功能
@@ -61,3 +62,11 @@ class CounterResetLabel(QLabel):
 
     def mousePressEvent(self, event) -> None:
         self.clicked.emit()
+
+
+class PortInputDialog(QInputDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setInputMode(QInputDialog.IntInput)
+        self.setIntMinimum(0)
+        self.setIntMaximum(65535)

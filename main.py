@@ -3,17 +3,18 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from MainWindowLogic import *
-from Network.TcpLogic import *
-from Network.UdpLogic import *
+from Network import TcpLogic, UdpLogic, WebLogic
 
 
-class MainWindow(QmyWidget, TcpLogic, UdpLogic):
+class MainWindow(QmyWidget, TcpLogic, UdpLogic, WebLogic):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.link_signal.connect(self.link_signal_handler)
         self.disconnect_signal.connect(self.disconnect_signal_handler)
         self.send_signal.connect(self.send_signal_handler)
+        self.tcp_signal_write_info.connect(self.info_write)
         self.tcp_signal_write_msg.connect(self.msg_write)
+        self.udp_signal_write_info.connect(self.info_write)
         self.udp_signal_write_msg.connect(self.msg_write)
 
     def link_signal_handler(self, signal):
@@ -30,6 +31,8 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
             self.udp_server_start(port)
         elif link_type == self.ClientUDP:
             self.udp_client_start(target_ip, port)
+        elif link_type == self.WebServer:
+            self.web_server_start(port)
 
     def disconnect_signal_handler(self):
         """
@@ -40,6 +43,8 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic):
             self.tcp_close()
         elif self.link_flag == self.ServerUDP or self.link_flag == self.ClientUDP:
             self.udp_close()
+        elif self.link_flag == self.WebServer:
+            self.web_close()
 
     def send_signal_handler(self, msg):
         """
