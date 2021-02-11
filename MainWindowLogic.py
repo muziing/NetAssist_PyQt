@@ -144,13 +144,16 @@ class QmyWidget(QWidget):
         if self.receive_flag:
             self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
 
-    def info_write(self, info: str):
+    def info_write(self, info: str, mode: int):
         """
         将接收到的消息写入ReceivePlainTextEdit
         :return: None
         """
         if self.receive_flag:
-            self.__ui.ReceivePlainTextEdit.appendHtml(f'<font color="blue">{info}</font>')
+            if mode == self.InfoRec:
+                self.__ui.ReceivePlainTextEdit.appendHtml(f'<font color="blue">{info}</font>')
+            elif mode == self.InfoSend:
+                self.__ui.ReceivePlainTextEdit.appendHtml(f'<font color="green">{info}</font>')
             self.__ui.ReceivePlainTextEdit.appendHtml('\n')
             self.ReceiveCounter += 1
             self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
@@ -227,6 +230,8 @@ class QmyWidget(QWidget):
     ServerUDP = 2
     ClientUDP = 3
     WebServer = 4
+    InfoSend = 0
+    InfoRec = 1
 
 
 if __name__ == '__main__':

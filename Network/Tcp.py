@@ -8,7 +8,7 @@ from Network import StopThreading
 
 
 class TcpLogic:
-    tcp_signal_write_info = pyqtSignal(str)
+    tcp_signal_write_info = pyqtSignal(str, int)
     tcp_signal_write_msg = pyqtSignal(str)
 
     def __init__(self):
@@ -64,7 +64,7 @@ class TcpLogic:
                         info = recv_msg.decode('utf-8')
                         msg = f'来自IP:{address[0]}端口:{address[1]}:'
                         self.tcp_signal_write_msg.emit(msg)
-                        self.tcp_signal_write_info.emit(info)
+                        self.tcp_signal_write_info.emit(info, self.InfoRec)
 
                     else:
                         client.close()
@@ -78,17 +78,17 @@ class TcpLogic:
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         address = (ip, port)
         try:
-            info = '正在连接目标服务器\n'
-            self.tcp_signal_write_info.emit(info)
+            msg = '正在连接目标服务器\n'
+            self.tcp_signal_write_msg.emit(msg)
             self.tcp_socket.connect(address)
         except Exception as ret:
-            info = '无法连接目标服务器\n'
-            self.tcp_signal_write_info.emit(info)
+            msg = '无法连接目标服务器\n'
+            self.tcp_signal_write_msg.emit(msg)
         else:
             self.client_th = threading.Thread(target=self.tcp_client_concurrency, args=(address,))
             self.client_th.start()
-            info = 'TCP客户端已连接IP:%s端口:%s\n' % address
-            self.tcp_signal_write_info.emit(info)
+            msg = 'TCP客户端已连接IP:%s端口:%s\n' % address
+            self.tcp_signal_write_msg.emit(msg)
 
     def tcp_client_concurrency(self, address) -> None:
         """
@@ -101,7 +101,7 @@ class TcpLogic:
                 info = recv_msg.decode('utf-8')
                 msg = f'来自IP:{address[0]}端口:{address[1]}:'
                 self.tcp_signal_write_msg.emit(msg)
-                self.tcp_signal_write_info.emit(info)
+                self.tcp_signal_write_info.emit(info, self.InfoRec)
             else:
                 self.tcp_socket.close()
                 msg = '从服务器断开连接\n'
@@ -114,22 +114,24 @@ class TcpLogic:
         :return: None
         """
         try:
-            send_info = send_info.encode('utf-8')
+            send_info_encoded = send_info.encode('utf-8')
             if self.link_flag == self.ServerTCP:
                 # 向所有连接的客户端发送消息
                 if self.client_socket_list:
                     for client, address in self.client_socket_list:
                         try:
-                            client.send(send_info)
+                            client.send(send_info_encoded)
                         except Exception as ret:
                             # 处理Client异常掉线的情况
                             continue
-                    msg = 'TCP服务端已发送\n'
+                    msg = 'TCP服务端已发送'
                     self.tcp_signal_write_msg.emit(msg)
+                    self.tcp_signal_write_info.emit(send_info, self.InfoSend)
             if self.link_flag == self.ClientTCP:
-                self.tcp_socket.send(send_info)
-                msg = 'TCP客户端已发送\n'
+                self.tcp_socket.send(send_info_encoded)
+                msg = 'TCP客户端已发送'
                 self.tcp_signal_write_msg.emit(msg)
+                self.tcp_signal_write_info.emit(send_info, self.InfoSend)
         except Exception as ret:
             msg = '发送失败\n'
             self.tcp_signal_write_msg.emit(msg)
@@ -170,3 +172,5 @@ class TcpLogic:
     NoLink = -1
     ServerTCP = 0
     ClientTCP = 1
+    InfoSend = 0
+    InfoRec = 1

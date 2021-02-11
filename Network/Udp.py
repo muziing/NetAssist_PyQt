@@ -19,7 +19,7 @@ def get_host_ip() -> str:
 
 class UdpLogic:
     udp_signal_write_msg = pyqtSignal(str)
-    udp_signal_write_info = pyqtSignal(str)
+    udp_signal_write_info = pyqtSignal(str, int)
 
     def __init__(self):
         self.link_flag = False
@@ -52,7 +52,7 @@ class UdpLogic:
             info = recv_msg.decode('utf-8')
             msg = f'来自IP:{recv_addr[0]}端口:{recv_addr[1]}:'
             self.udp_signal_write_msg.emit(msg)
-            self.udp_signal_write_info.emit(info)
+            self.udp_signal_write_info.emit(info, self.InfoRec)
 
     def udp_client_start(self, ip: str, port: int):
         """
@@ -70,10 +70,11 @@ class UdpLogic:
         :return: None
         """
         try:
-            send_info = send_info.encode('utf-8')
-            self.udp_socket.sendto(send_info, self.address)
-            msg = 'UDP客户端已发送\n'
+            send_info_encoded = send_info.encode('utf-8')
+            self.udp_socket.sendto(send_info_encoded, self.address)
+            msg = 'UDP客户端已发送'
             self.udp_signal_write_msg.emit(msg)
+            self.udp_signal_write_info.emit(send_info, self.InfoSend)
         except Exception as ret:
             msg = '发送失败\n'
             self.udp_signal_write_msg.emit(msg)
@@ -112,3 +113,5 @@ class UdpLogic:
     NoLink = -1
     ServerUDP = 2
     ClientUDP = 3
+    InfoSend = 0
+    InfoRec = 1
