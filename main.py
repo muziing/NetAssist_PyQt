@@ -43,7 +43,6 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic, WebLogic):
             self.udp_close()
         elif self.link_flag == self.WebServer:
             self.web_close()
-            # TODO 解决Webserver线程无法正常关闭问题
 
     def send_signal_handler(self, msg):
         """发送按钮的槽函数"""

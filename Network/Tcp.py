@@ -78,7 +78,7 @@ class TcpLogic:
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         address = (ip, port)
         try:
-            msg = '正在连接目标服务器\n'
+            msg = '正在连接目标服务器……\n'
             self.tcp_signal_write_msg.emit(msg)
             self.tcp_socket.connect(address)
         except Exception as ret:
