@@ -366,6 +366,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QCheckBox" name="HEXReceiveCheckBox">
+         <property name="toolTip">
+          <string>以十六进接收</string>
+         </property>
          <property name="text">
           <string>HEX(暂不支持)</string>
          </property>
@@ -386,10 +389,13 @@
          <item>
           <widget class="QPushButton" name="RSaveDataButton">
            <property name="toolTip">
-            <string>保存接收区内容到txt文件</string>
+            <string>保存接收区内容到txt文件 Ctrl+S</string>
            </property>
            <property name="text">
             <string>保存数据</string>
+           </property>
+           <property name="shortcut">
+            <string>Ctrl+S</string>
            </property>
           </widget>
          </item>
@@ -414,6 +420,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
         <widget class="QCheckBox" name="SendHEXCheckBox">
+         <property name="toolTip">
+          <string>以十六进制发送</string>
+         </property>
          <property name="text">
           <string>HEX(暂不支持)</string>
          </property>
@@ -513,8 +522,14 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>打开要发送的文本文件或选择WebServer工作目录 Ctrl+O</string>
+       </property>
        <property name="text">
         <string>打开文件</string>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+O</string>
        </property>
       </widget>
      </item>
@@ -619,6 +634,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QLabel" name="label_9">
+       <property name="toolTip">
+        <string/>
+       </property>
        <property name="text">
         <string>发送计数:</string>
        </property>
@@ -727,6 +745,9 @@
      </item>
      <item>
       <widget class="CounterResetLabel" name="CounterResetLabel">
+       <property name="toolTip">
+        <string>清零计数器</string>
+       </property>
        <property name="text">
         <string>复位计数</string>
        </property>
