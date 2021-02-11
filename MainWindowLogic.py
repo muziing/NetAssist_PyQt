@@ -20,7 +20,7 @@ class QmyWidget(QWidget):
         self.__ui.retranslateUi(self)
 
         self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 保持窗口最前
-        self.__ui.MyHostAddrLineEdit.setText(get_host_ip())
+        self.__ui.MyHostAddrLineEdit.setText(get_host_ip())  # 显示本机IP地址
 
         self.link_flag = self.NoLink
         self.receive_flag = True
@@ -37,8 +37,10 @@ class QmyWidget(QWidget):
 
     def connect_button_toggled_handler(self, state):
         if state:
+            # 连接按钮连接
             self.click_link_handler()
         else:
+            # 连接按钮断开连接
             self.click_disconnect()
             self.editable(True)
 
@@ -50,10 +52,7 @@ class QmyWidget(QWidget):
         self.__ui.TargetPortLineEdit.setReadOnly(not able)
 
     def click_link_handler(self):
-        """
-        ConnectButton控件点击触发的槽
-        :return: None
-        """
+        """连接按钮连接时的槽函数"""
         server_flag = False  # 如果没有输入目标IP与端口号，则作为Server使用
         protocol_type_text = self.__ui.ProtocolTypeComboBox.currentText()
         target_ip = str(self.__ui.TargetIPLineEdit.text())
@@ -87,14 +86,12 @@ class QmyWidget(QWidget):
             input_d.intValueSelected.connect(lambda val: self.__ui.TargetPortLineEdit.setText(str(val)))
             input_d.open()
             self.__ui.ConnectButton.setChecked(False)
-            self.editable(True)
             # 提前终止槽函数
             return None
         elif target_port != -1 and target_ip == '':
             mb = QMessageBox(QMessageBox.Critical, 'Client启动错误', '请输入目标IP地址', QMessageBox.Ok, self)
             mb.open()
             self.__ui.ConnectButton.setChecked(False)
-            self.editable(True)
             # 提前终止槽函数
             return None
 
@@ -124,7 +121,7 @@ class QmyWidget(QWidget):
         :return: None
         """
         if self.link_flag != self.NoLink:
-            loop_flag = self.__ui.LoopSendCheckBox.checkState()
+            loop_flag = self.__ui.LoopSendCheckBox.checkState()  # 循环发送标识
             send_msg = self.__ui.SendPlainTextEdit.toPlainText()
             if loop_flag == 0:
                 self.send_signal.emit(send_msg)
@@ -133,20 +130,19 @@ class QmyWidget(QWidget):
                 send_timer.start(int(self.__ui.LoopSendSpinBox.value()))
                 send_timer.timeout.connect(lambda: self.send_signal.emit(send_msg))
                 self.__ui.LoopSendCheckBox.stateChanged.connect(lambda val: send_timer.stop() if val == 0 else None)
-                self.__ui.ConnectButton.toggled.connect(lambda val: None if val else send_timer.stop())
+                self.__ui.ConnectButton.toggled.connect(lambda val: None if val else send_timer.stop())  # 断开连接停止计时
 
     def msg_write(self, msg: str):
-        """
-        将提示消息写入ReceivePlainTextEdit
-        :return: None
-        """
+        """将提示消息写入ReceivePlainTextEdit"""
         # TODO 显示接收时间
         if self.receive_flag:
             self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
 
     def info_write(self, info: str, mode: int):
         """
-        将接收到的消息写入ReceivePlainTextEdit
+        将接收到或已发送的消息写入ReceivePlainTextEdit
+        :param info: 接收或发送的消息
+        :param mode: 模式，接收/发送
         :return: None
         """
         if self.receive_flag:
@@ -167,10 +163,12 @@ class QmyWidget(QWidget):
         self.__ui.StateLabel.setText("未连接")
 
     def counter_signal_handler(self, send_count, receive_count):
+        """控制收发计数器显示变化的槽函数"""
         self.__ui.SendCounterLabel.setText(str(send_count))
         self.__ui.ReceiveCounterLabel.setText(str(receive_count))
 
     def counter_reset_button_handler(self):
+        """清零收发计数器的槽函数"""
         self.SendCounter = 0
         self.ReceiveCounter = 0
         self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
@@ -200,10 +198,7 @@ class QmyWidget(QWidget):
             pass
 
     def r_save_data_button_handler(self):
-        """
-        接收设置保存数据按键的槽函数
-        :return: None
-        """
+        """接收设置保存数据按键的槽函数"""
         text = self.__ui.ReceivePlainTextEdit.toPlainText()
         file_name = QFileDialog.getSaveFileName(self, "保存到txt", "./", "ALL(*, *);;txt文件(*.txt)", "txt文件(*.txt)")[0]
         try:
@@ -213,10 +208,7 @@ class QmyWidget(QWidget):
             pass  # 如果用户取消输入，filename为空，会出现FileNotFoundError
 
     def receive_pause_checkbox_toggled_handler(self, ste: bool):
-        """
-        暂停接受复选框的槽函数
-        :return: None
-        """
+        """暂停接受复选框的槽函数"""
         if ste:
             self.receive_flag = False
         else:
