@@ -137,6 +137,8 @@ class QmyWidget(QWidget):
         # TODO 显示接收时间
         if self.receive_flag:
             self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
+        if msg in ['从服务器断开连接\n', '无法连接目标服务器\n']:
+            self.__ui.ConnectButton.setChecked(False)
 
     def info_write(self, info: str, mode: int):
         """
