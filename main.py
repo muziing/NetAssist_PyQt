@@ -16,10 +16,11 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic, WebLogic):
         self.tcp_signal_write_info.connect(self.info_write)
         self.udp_signal_write_msg.connect(self.msg_write)
         self.udp_signal_write_info.connect(self.info_write)
+        self.signal_write_msg.connect(self.msg_write)
 
     def link_signal_handler(self, signal):
         """
-        发送信号分用的槽函数
+        连接信号分用的槽函数
         :return: None
         """
         link_type, target_ip, port = signal
@@ -35,10 +36,7 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic, WebLogic):
             self.web_server_start(port)
 
     def disconnect_signal_handler(self):
-        """
-        断开连接的槽函数
-        :return: None
-        """
+        """断开连接的槽函数"""
         if self.link_flag == self.ServerTCP or self.link_flag == self.ClientTCP:
             self.tcp_close()
         elif self.link_flag == self.ServerUDP or self.link_flag == self.ClientUDP:
@@ -48,10 +46,7 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic, WebLogic):
             # TODO 解决Webserver线程无法正常关闭问题
 
     def send_signal_handler(self, msg):
-        """
-        发送按钮的槽函数
-        :return: None
-        """
+        """发送按钮的槽函数"""
         if self.link_flag == self.ServerTCP or self.link_flag == self.ClientTCP:
             self.tcp_send(msg)
             self.SendCounter += 1

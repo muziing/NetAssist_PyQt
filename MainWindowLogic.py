@@ -7,7 +7,6 @@ from UI.MyWidgets import PortInputDialog
 
 
 class QmyWidget(QWidget):
-    # link_signal = pyqtSignal((int, str, int, int))  # 连接类型, 目标IP, 本机端口, 目标端口
     link_signal = pyqtSignal(tuple)  # 连接类型, 目标IP, 本机/目标端口
     disconnect_signal = pyqtSignal()
     send_signal = pyqtSignal(str)
@@ -26,6 +25,7 @@ class QmyWidget(QWidget):
         self.receive_flag = True
         self.SendCounter = 0
         self.ReceiveCounter = 0
+        self.dir = None
 
         self.counter_signal.connect(self.counter_signal_handler)
         self.__ui.ConnectButton.toggled.connect(self.connect_button_toggled_handler)
@@ -94,6 +94,12 @@ class QmyWidget(QWidget):
             self.__ui.ConnectButton.setChecked(False)
             # 提前终止槽函数
             return None
+        if protocol_type_text == "Web Server" and not self.dir:
+            # 处理用户未选择工作路径情况下连接网络
+            self.dir = QFileDialog.getExistingDirectory(self, "选择index.html所在路径", './')
+            self.__ui.SendPlainTextEdit.clear()
+            self.__ui.SendPlainTextEdit.appendPlainText(str(self.dir))
+            self.__ui.SendPlainTextEdit.setEnabled(False)
 
         if protocol_type_text == "TCP" and server_flag:
             self.link_signal.emit((self.ServerTCP, '', my_port))
@@ -112,8 +118,10 @@ class QmyWidget(QWidget):
             self.link_signal.emit((self.ClientUDP, target_ip, target_port))
             self.link_flag = self.ClientUDP
             self.__ui.StateLabel.setText("UDP客户端")
-        elif protocol_type_text == "Web Server" and server_flag:
+        elif protocol_type_text == "Web Server" and server_flag and self.dir:
             self.link_signal.emit((self.WebServer, '', my_port))
+            self.link_flag = self.WebServer
+            self.__ui.StateLabel.setText("Web server")
 
     def send_link_handler(self):
         """
@@ -137,8 +145,6 @@ class QmyWidget(QWidget):
         # TODO 显示接收时间
         if self.receive_flag:
             self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
-        if msg in ['从服务器断开连接\n', '无法连接目标服务器\n']:
-            self.__ui.ConnectButton.setChecked(False)
 
     def info_write(self, info: str, mode: int):
         """
@@ -195,9 +201,11 @@ class QmyWidget(QWidget):
             fd.fileSelected.connect(read_file)
             fd.open()
 
-        elif self.link_flag == self.WebServer:
-            # TODO 实现获取WebServer工作目录功能
-            pass
+        elif self.link_flag == self.NoLink and self.__ui.ProtocolTypeComboBox.currentText() == 'Web Server':
+            self.dir = QFileDialog.getExistingDirectory(self, "选择index.html所在路径", './')
+            self.__ui.SendPlainTextEdit.clear()
+            self.__ui.SendPlainTextEdit.appendPlainText(str(self.dir))
+            self.__ui.SendPlainTextEdit.setEnabled(False)
 
     def r_save_data_button_handler(self):
         """接收设置保存数据按键的槽函数"""
