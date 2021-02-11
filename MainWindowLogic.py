@@ -21,6 +21,7 @@ class QmyWidget(QWidget):
         self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 保持窗口最前
         self.__ui.MyHostAddrLineEdit.setText(get_host_ip())  # 显示本机IP地址
 
+        self.protocol_type = 'TCP'
         self.link_flag = self.NoLink
         self.receive_flag = True
         self.SendCounter = 0
@@ -28,6 +29,7 @@ class QmyWidget(QWidget):
         self.dir = None
 
         self.counter_signal.connect(self.counter_signal_handler)
+        self.__ui.ProtocolTypeComboBox.activated[str].connect(self.protocol_type_combobox_handler)
         self.__ui.ConnectButton.toggled.connect(self.connect_button_toggled_handler)
         self.__ui.SendButton.clicked.connect(self.send_link_handler)
         self.__ui.OpenFilePushButton.clicked.connect(self.open_file_handler)
@@ -51,10 +53,16 @@ class QmyWidget(QWidget):
         self.__ui.TargetIPLineEdit.setReadOnly(not able)
         self.__ui.TargetPortLineEdit.setReadOnly(not able)
 
+    def protocol_type_combobox_handler(self, p_type):
+        """ProtocolTypeComboBox的槽函数"""
+        self.protocol_type = p_type
+        if self.protocol_type != 'Web Server':
+            # 恢复发送输入框可用
+            self.__ui.SendPlainTextEdit.setReadOnly(False)
+
     def click_link_handler(self):
         """连接按钮连接时的槽函数"""
         server_flag = False  # 如果没有输入目标IP与端口号，则作为Server使用
-        protocol_type_text = self.__ui.ProtocolTypeComboBox.currentText()
         target_ip = str(self.__ui.TargetIPLineEdit.text())
 
         def get_int_port(port):
@@ -94,31 +102,31 @@ class QmyWidget(QWidget):
             self.__ui.ConnectButton.setChecked(False)
             # 提前终止槽函数
             return None
-        if protocol_type_text == "Web Server" and not self.dir:
+        if self.protocol_type == "Web Server" and not self.dir:
             # 处理用户未选择工作路径情况下连接网络
             self.dir = QFileDialog.getExistingDirectory(self, "选择index.html所在路径", './')
             self.__ui.SendPlainTextEdit.clear()
             self.__ui.SendPlainTextEdit.appendPlainText(str(self.dir))
-            self.__ui.SendPlainTextEdit.setEnabled(False)
+            self.__ui.SendPlainTextEdit.setReadOnly(True)
 
-        if protocol_type_text == "TCP" and server_flag:
+        if self.protocol_type == "TCP" and server_flag:
             self.link_signal.emit((self.ServerTCP, '', my_port))
             self.link_flag = self.ServerTCP
             self.__ui.StateLabel.setText("TCP服务端")
-        elif protocol_type_text == "TCP" and not server_flag:
+        elif self.protocol_type == "TCP" and not server_flag:
             self.link_signal.emit((self.ClientTCP, target_ip, target_port))
             self.link_flag = self.ClientTCP
             self.__ui.StateLabel.setText("TCP客户端")
-        elif protocol_type_text == "UDP" and server_flag:
+        elif self.protocol_type == "UDP" and server_flag:
             self.link_signal.emit((self.ServerUDP, '', my_port))
             self.link_flag = self.ServerUDP
             self.__ui.StateLabel.setText("UDP服务端")
             # TODO 作为UDP服务端时禁用发送
-        elif protocol_type_text == "UDP" and not server_flag:
+        elif self.protocol_type == "UDP" and not server_flag:
             self.link_signal.emit((self.ClientUDP, target_ip, target_port))
             self.link_flag = self.ClientUDP
             self.__ui.StateLabel.setText("UDP客户端")
-        elif protocol_type_text == "Web Server" and server_flag and self.dir:
+        elif self.protocol_type == "Web Server" and server_flag and self.dir:
             self.link_signal.emit((self.WebServer, '', my_port))
             self.link_flag = self.WebServer
             self.__ui.StateLabel.setText("Web server")
@@ -201,7 +209,7 @@ class QmyWidget(QWidget):
             fd.fileSelected.connect(read_file)
             fd.open()
 
-        elif self.link_flag == self.NoLink and self.__ui.ProtocolTypeComboBox.currentText() == 'Web Server':
+        elif self.link_flag == self.NoLink and self.protocol_type == 'Web Server':
             self.dir = QFileDialog.getExistingDirectory(self, "选择index.html所在路径", './')
             self.__ui.SendPlainTextEdit.clear()
             self.__ui.SendPlainTextEdit.appendPlainText(str(self.dir))
