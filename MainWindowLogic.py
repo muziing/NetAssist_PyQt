@@ -23,7 +23,7 @@ class QmyWidget(QWidget):
 
         self.protocol_type = 'TCP'
         self.link_flag = self.NoLink
-        self.receive_flag = True
+        self.receive_show_flag = True  # 是否显示接收到的消息
         self.SendCounter = 0
         self.ReceiveCounter = 0
         self.dir = None
@@ -157,7 +157,7 @@ class QmyWidget(QWidget):
     def msg_write(self, msg: str):
         """将提示消息写入ReceivePlainTextEdit"""
         # TODO 显示接收时间
-        if self.receive_flag:
+        if self.receive_show_flag:
             self.__ui.ReceivePlainTextEdit.appendPlainText(msg)
 
     def info_write(self, info: str, mode: int):
@@ -167,17 +167,18 @@ class QmyWidget(QWidget):
         :param mode: 模式，接收/发送
         :return: None
         """
-        if self.receive_flag:
+        if self.receive_show_flag:
             if mode == self.InfoRec:
                 self.__ui.ReceivePlainTextEdit.appendHtml(f'<font color="blue">{info}</font>')
+                self.ReceiveCounter += 1
+                self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
             elif mode == self.InfoSend:
                 self.__ui.ReceivePlainTextEdit.appendHtml(f'<font color="green">{info}</font>')
             self.__ui.ReceivePlainTextEdit.appendHtml('\n')
-            self.ReceiveCounter += 1
-            self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
         else:
-            self.ReceiveCounter += 1
-            self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
+            if mode == self.InfoRec:
+                self.ReceiveCounter += 1
+                self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
 
     def click_disconnect(self):
         self.disconnect_signal.emit()
@@ -234,9 +235,9 @@ class QmyWidget(QWidget):
     def receive_pause_checkbox_toggled_handler(self, ste: bool):
         """暂停接受复选框的槽函数"""
         if ste:
-            self.receive_flag = False
+            self.receive_show_flag = False
         else:
-            self.receive_flag = True
+            self.receive_show_flag = True
 
     # TODO 最小化到托盘
 
