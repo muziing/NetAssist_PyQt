@@ -56,9 +56,15 @@ class QmyWidget(QWidget):
     def protocol_type_combobox_handler(self, p_type):
         """ProtocolTypeComboBox的槽函数"""
         self.protocol_type = p_type
-        if self.protocol_type != 'Web Server':
+        if self.protocol_type == 'Web Server':
+            self.__ui.SendPlainTextEdit.setPlainText("请打开index.html所在的文件路径")
+            self.__ui.SendPlainTextEdit.setEnabled(False)
+            self.__ui.OpenFilePushButton.setText("选择路径")
+        else:
             # 恢复发送输入框可用
-            self.__ui.SendPlainTextEdit.setReadOnly(False)
+            self.__ui.SendPlainTextEdit.setEnabled(True)
+            self.__ui.SendPlainTextEdit.clear()
+            self.__ui.OpenFilePushButton.setText("打开文件")
 
     def click_link_handler(self):
         """连接按钮连接时的槽函数"""
@@ -107,7 +113,7 @@ class QmyWidget(QWidget):
             self.dir = QFileDialog.getExistingDirectory(self, "选择index.html所在路径", './')
             self.__ui.SendPlainTextEdit.clear()
             self.__ui.SendPlainTextEdit.appendPlainText(str(self.dir))
-            self.__ui.SendPlainTextEdit.setReadOnly(True)
+            self.__ui.SendPlainTextEdit.setEnabled(False)
 
         if self.protocol_type == "TCP" and server_flag:
             self.link_signal.emit((self.ServerTCP, '', my_port))
