@@ -2,8 +2,8 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 
-from MainWindowLogic import *
-from Network import TcpLogic, UdpLogic, WebLogic
+from MainWindowLogic import WidgetLogic
+from Network import NetworkLogic
 
 
 class CommonHelper:
@@ -17,7 +17,7 @@ class CommonHelper:
             return f.read()
 
 
-class MainWindow(QmyWidget, TcpLogic, UdpLogic, WebLogic):
+class MainWindow(WidgetLogic, NetworkLogic):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.link_signal.connect(self.link_signal_handler)

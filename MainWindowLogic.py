@@ -6,7 +6,7 @@ from UI import MainWindowUI
 from UI.MyWidgets import PortInputDialog
 
 
-class QmyWidget(QWidget):
+class WidgetLogic(QWidget):
     link_signal = pyqtSignal(tuple)  # 连接类型, 目标IP, 本机/目标端口
     disconnect_signal = pyqtSignal()
     send_signal = pyqtSignal(str)
@@ -256,6 +256,6 @@ if __name__ == '__main__':
     from PyQt5.QtWidgets import QApplication
 
     app = QApplication(sys.argv)
-    window = QmyWidget()
+    window = WidgetLogic()
     window.show()
     sys.exit(app.exec_())
