@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qss/flatwhite.css</file>
+        <file>qss/flatwhite/add_bottom.png</file>
+        <file>qss/flatwhite/add_left.png</file>
+        <file>qss/flatwhite/add_right.png</file>
+        <file>qss/flatwhite/add_top.png</file>
+        <file>qss/flatwhite/branch_close.png</file>
+        <file>qss/flatwhite/branch_open.png</file>
+        <file>qss/flatwhite/calendar_nextmonth.png</file>
+        <file>qss/flatwhite/calendar_prevmonth.png</file>
+        <file>qss/flatwhite/checkbox_checked.png</file>
+        <file>qss/flatwhite/checkbox_checked_disable.png</file>
+        <file>qss/flatwhite/checkbox_parcial.png</file>
+        <file>qss/flatwhite/checkbox_parcial_disable.png</file>
+        <file>qss/flatwhite/checkbox_unchecked.png</file>
+        <file>qss/flatwhite/checkbox_unchecked_disable.png</file>
+        <file>qss/flatwhite/radiobutton_checked.png</file>
+        <file>qss/flatwhite/radiobutton_checked_disable.png</file>
+        <file>qss/flatwhite/radiobutton_unchecked.png</file>
+        <file>qss/flatwhite/radiobutton_unchecked_disable.png</file>
+    </qresource>
+</RCC>

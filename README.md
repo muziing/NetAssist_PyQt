@@ -21,6 +21,7 @@
 ## 致谢
 
 [Network](./Network)包下的模块大量借鉴了[Wangler2333](https://github.com/Wangler2333) 的开源项目 [tcp_udp_web_tools-pyqt5](https://github.com/Wangler2333/tcp_udp_web_tools-pyqt5)
+QSS美化的代码来自[飞扬青云](https://blog.csdn.net/feiyangqingyun) 的 [QWidgetDemo](https://github.com/feiyangqingyun/QWidgetDemo) 项目
 
 在此表示感谢
 

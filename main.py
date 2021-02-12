@@ -6,6 +6,17 @@ from MainWindowLogic import *
 from Network import TcpLogic, UdpLogic, WebLogic
 
 
+class CommonHelper:
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def read_qss(style):
+        """读取QSS样式表的方法"""
+        with open(style, 'r') as f:
+            return f.read()
+
+
 class MainWindow(QmyWidget, TcpLogic, UdpLogic, WebLogic):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -66,5 +77,10 @@ class MainWindow(QmyWidget, TcpLogic, UdpLogic, WebLogic):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
+    styleFile = './Style/qss/flat_white.qss'
+    import Style.qss_rc  # 导入资源
+
+    qssStyle = CommonHelper.read_qss(styleFile)
+    window.setStyleSheet(qssStyle)
     window.show()
     sys.exit(app.exec_())
