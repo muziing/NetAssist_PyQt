@@ -111,9 +111,13 @@ class WidgetLogic(QWidget):
         if self.protocol_type == "Web Server" and not self.dir:
             # 处理用户未选择工作路径情况下连接网络
             self.dir = QFileDialog.getExistingDirectory(self, "选择index.html所在路径", './')
-            self.__ui.SendPlainTextEdit.clear()
-            self.__ui.SendPlainTextEdit.appendPlainText(str(self.dir))
-            self.__ui.SendPlainTextEdit.setEnabled(False)
+            if self.dir:
+                self.__ui.SendPlainTextEdit.clear()
+                self.__ui.SendPlainTextEdit.appendPlainText(str(self.dir))
+                self.__ui.SendPlainTextEdit.setEnabled(False)
+            else:
+                self.__ui.ConnectButton.setChecked(False)
+                return None
 
         if self.protocol_type == "TCP" and server_flag:
             self.link_signal.emit((self.ServerTCP, '', my_port))

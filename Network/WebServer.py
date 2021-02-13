@@ -4,7 +4,6 @@ import threading
 from time import sleep
 
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QFileDialog
 
 from Network import StopThreading
 
@@ -76,16 +75,6 @@ class WebLogic:
                     else:
                         client.close()
                         self.client_socket_list.remove((client, address))
-
-    def web_get_dir(self):
-        """
-        获取用户选择的路径
-        保存到self.dir中，并显示出来
-        :return:
-        """
-        self.dir = QFileDialog.getExistingDirectory(self, "获取文件夹路径", './')
-        if self.dir:
-            self.label_dir.setText(self._translate("TCP-UDP", "%s" % self.dir))
 
     def web_send_msg(self, msg_dir):
         """
