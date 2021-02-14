@@ -2,7 +2,7 @@
 
 ## 简介
 
-学习PyQt5过程中用来练习实践的项目。能实现基本的TCP、UDP连接与信息发送。
+学习PyQt5过程中用来练习实践的项目。能实现基本的TCP、UDP连接与信息发送，以及一个简易WebServer。
 
 可以搭配博文食用[网络调试助手 程序设计（PyQt5实战）——来自muzing的博客](https://muzing.top/posts/5ab16c09/)
 
@@ -16,11 +16,11 @@
 
 ## 结构
 
-![继承关系](https://oss.muzing.top/image/image-20210204193805962.png)
+![继承关系](https://oss.muzing.top/image/image-20210212193805.png)
 
 ## 致谢
-
 [Network](./Network)包下的模块大量借鉴了[Wangler2333](https://github.com/Wangler2333) 的开源项目 [tcp_udp_web_tools-pyqt5](https://github.com/Wangler2333/tcp_udp_web_tools-pyqt5)
+
 QSS美化的代码来自[飞扬青云](https://blog.csdn.net/feiyangqingyun) 的 [QWidgetDemo](https://github.com/feiyangqingyun/QWidgetDemo) 项目
 
 在此表示感谢
