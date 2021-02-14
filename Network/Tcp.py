@@ -119,11 +119,7 @@ class TcpLogic:
                 # 向所有连接的客户端发送消息
                 if self.client_socket_list:
                     for client, address in self.client_socket_list:
-                        try:
-                            client.send(send_info_encoded)
-                        except Exception as ret:
-                            # 处理Client异常掉线的情况
-                            continue
+                        client.send(send_info_encoded)
                     msg = 'TCP服务端已发送'
                     self.tcp_signal_write_msg.emit(msg)
                     self.tcp_signal_write_info.emit(send_info, self.InfoSend)
@@ -143,7 +139,7 @@ class TcpLogic:
         """
         if self.link_flag == self.ServerTCP:
             for client, address in self.client_socket_list:
-                client.shutdown(2)
+                client.shutdown(socket.SHUT_RDWR)
                 client.close()
             self.client_socket_list = list()  # 把已连接的客户端列表重新置为空列表
             self.tcp_socket.close()
@@ -157,7 +153,7 @@ class TcpLogic:
 
         elif self.link_flag == self.ClientTCP:
             try:
-                self.tcp_socket.shutdown(2)
+                self.tcp_socket.shutdown(socket.SHUT_RDWR)
                 self.tcp_socket.close()
                 msg = '已断开网络\n'
                 self.tcp_signal_write_msg.emit(msg)
