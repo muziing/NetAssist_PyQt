@@ -4,6 +4,7 @@ import threading
 from time import sleep
 
 from PyQt5.QtCore import pyqtSignal
+from typing import Tuple
 
 from Network import StopThreading
 
@@ -17,10 +18,9 @@ class WebLogic:
         self.dir = None
         self.client_socket_list = list()
 
-    def web_server_start(self, port: int):
+    def web_server_start(self, port: int) -> None:
         """
         功能函数，WEB服务端开启的方法
-        :return: None
         """
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # 取消主动断开连接四次握手后的TIME_WAIT状态
@@ -39,12 +39,11 @@ class WebLogic:
             msg = 'WEB服务端正在监听端口:%s\n' % str(port)
             self.signal_write_msg.emit(msg)
 
-    def web_server_concurrency(self):
+    def web_server_concurrency(self) -> None:
         """
         功能函数，供创建线程的方法；
         使用子线程用于监听并创建连接，使主线程可以继续运行，以免无响应
         使用非阻塞式并发用于接收客户端消息，减少系统资源浪费，使软件轻量化
-        :return:None
         """
         while True:
             try:
@@ -76,7 +75,7 @@ class WebLogic:
                         client.close()
                         self.client_socket_list.remove((client, address))
 
-    def web_send_msg(self, msg_dir):
+    def web_send_msg(self, msg_dir) -> Tuple[bytes, bytes]:
         """
         构造浏览器请求后返回的数据
         :param msg_dir: 浏览器请求的路径
@@ -116,7 +115,7 @@ class WebLogic:
         return response_header.encode('utf-8'), response_body
 
     @staticmethod
-    def web_file_header(msg_dir):
+    def web_file_header(msg_dir) -> str:
         """
         根据返回文件的类型，制作相应的Content-Type数据
         :param msg_dir: 历览器请求的路径
@@ -137,10 +136,9 @@ class WebLogic:
         else:
             return file_header
 
-    def web_send(self, client, msg_dir):
+    def web_send(self, client, msg_dir) -> None:
         """
         WEB服务器发送消息的方法
-        :return: None
         """
         try:
             # 通过web_send_msg方法构造头文件及数据
@@ -154,10 +152,9 @@ class WebLogic:
             msg = '发送失败\n'
             self.signal_write_msg.emit(msg)
 
-    def web_close(self):
+    def web_close(self) -> None:
         """
         功能函数，关闭网络连接的方法
-        :return:
         """
         try:
             for client, address in self.client_socket_list:

@@ -18,10 +18,9 @@ class TcpLogic:
         self.client_socket_list = list()
         self.link_flag = self.NoLink  # 用于标记是否开启了连接
 
-    def tcp_server_start(self, port: int):
+    def tcp_server_start(self, port: int) -> None:
         """
         功能函数，TCP服务端开启的方法
-        :return: None
         """
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # 取消主动断开连接四次握手后的TIME_WAIT状态
@@ -40,7 +39,8 @@ class TcpLogic:
         功能函数，供创建线程的方法；
         使用子线程用于监听并创建连接，使主线程可以继续运行，以免无响应
         使用非阻塞式并发用于接收客户端消息，减少系统资源浪费，使软件轻量化
-        :return:None
+
+        :return: None
         """
         while True:
             try:
@@ -70,10 +70,9 @@ class TcpLogic:
                         client.close()
                         self.client_socket_list.remove((client, address))
 
-    def tcp_client_start(self, ip: str, port: int):
+    def tcp_client_start(self, ip: str, port: int) -> None:
         """
         功能函数，TCP客户端连接其他服务端的方法
-        :return:
         """
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         address = (ip, port)
@@ -93,7 +92,6 @@ class TcpLogic:
     def tcp_client_concurrency(self, address) -> None:
         """
         功能函数，用于TCP客户端创建子线程的方法，阻塞式接收
-        :return: None
         """
         while True:
             recv_msg = self.tcp_socket.recv(4096)
@@ -111,7 +109,6 @@ class TcpLogic:
     def tcp_send(self, send_info: str) -> None:
         """
         功能函数，用于TCP服务端和TCP客户端发送消息
-        :return: None
         """
         try:
             send_info_encoded = send_info.encode('utf-8')
@@ -135,7 +132,6 @@ class TcpLogic:
     def tcp_close(self) -> None:
         """
         功能函数，关闭网络连接的方法
-        :return: None
         """
         if self.link_flag == self.ServerTCP:
             for client, address in self.client_socket_list:

@@ -28,10 +28,9 @@ class UdpLogic:
         self.sever_th = None
         self.client_th = None
 
-    def udp_server_start(self, port):
+    def udp_server_start(self, port) -> None:
         """
         开启UDP服务端方法
-        :return:
         """
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         port = int(port)
@@ -42,10 +41,9 @@ class UdpLogic:
         msg = 'UDP服务端正在监听端口:{}\n'.format(port)
         self.udp_signal_write_msg.emit(msg)
 
-    def udp_server_concurrency(self):
+    def udp_server_concurrency(self) -> None:
         """
         用于创建一个线程持续监听UDP通信
-        :return:
         """
         while True:
             recv_msg, recv_addr = self.udp_socket.recvfrom(1024)
@@ -54,20 +52,18 @@ class UdpLogic:
             self.udp_signal_write_msg.emit(msg)
             self.udp_signal_write_info.emit(info, self.InfoRec)
 
-    def udp_client_start(self, ip: str, port: int):
+    def udp_client_start(self, ip: str, port: int) -> None:
         """
         确认UDP客户端的ip及地址
-        :return:
         """
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.address = (ip, port)
         msg = 'UDP客户端已启动\n'
         self.udp_signal_write_msg.emit(msg)
 
-    def udp_send(self, send_info: str):
+    def udp_send(self, send_info: str) -> None:
         """
         功能函数，用于UDP客户端发送消息
-        :return: None
         """
         try:
             send_info_encoded = send_info.encode('utf-8')
@@ -79,10 +75,9 @@ class UdpLogic:
             msg = '发送失败\n'
             self.udp_signal_write_msg.emit(msg)
 
-    def udp_close(self):
+    def udp_close(self) -> None:
         """
         功能函数，关闭网络连接的方法
-        :return:
         """
         if self.link_flag == self.ServerUDP:
             try:
