@@ -1,12 +1,12 @@
 # 网络调试助手
 
+![PyQt Version](https://img.shields.io/badge/PyQt-5.15-blue) ![license](https://img.shields.io/badge/license-MIT-green) ![Github stars](https://img.shields.io/github/stars/muziing/NetAssist_PyQt.svg)
+
 ## 简介
 
 学习PyQt5过程中用来练习实践的项目。能实现基本的TCP、UDP连接与信息发送，以及一个简易WebServer。
 
 可以搭配博文食用[网络调试助手 程序设计（PyQt5实战）——来自muzing的博客](https://muzing.top/posts/5ab16c09/)
-
-
 
 ![image1](https://oss.muzing.top/image/image-20210211094039165.png)
 
