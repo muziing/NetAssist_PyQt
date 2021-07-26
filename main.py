@@ -29,10 +29,9 @@ class MainWindow(WidgetLogic, NetworkLogic):
         self.udp_signal_write_info.connect(self.info_write)
         self.signal_write_msg.connect(self.msg_write)
 
-    def link_signal_handler(self, signal):
+    def link_signal_handler(self, signal) -> None:
         """
         连接信号分用的槽函数
-        :return: None
         """
         link_type, target_ip, port = signal
         if link_type == self.ServerTCP:
@@ -46,7 +45,7 @@ class MainWindow(WidgetLogic, NetworkLogic):
         elif link_type == self.WebServer:
             self.web_server_start(port)
 
-    def disconnect_signal_handler(self):
+    def disconnect_signal_handler(self) -> None:
         """断开连接的槽函数"""
         if self.link_flag == self.ServerTCP or self.link_flag == self.ClientTCP:
             self.tcp_close()
@@ -55,7 +54,7 @@ class MainWindow(WidgetLogic, NetworkLogic):
         elif self.link_flag == self.WebServer:
             self.web_close()
 
-    def send_signal_handler(self, msg):
+    def send_signal_handler(self, msg: str) -> None:
         """发送按钮的槽函数"""
         if self.link_flag == self.ServerTCP or self.link_flag == self.ClientTCP:
             self.tcp_send(msg)
@@ -69,7 +68,6 @@ class MainWindow(WidgetLogic, NetworkLogic):
         """
         重写closeEvent方法，实现MainWindow窗体关闭时执行一些代码
         :param event: close()触发的事件
-        :return: None
         """
         self.disconnect_signal_handler()
 

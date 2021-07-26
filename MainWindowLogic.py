@@ -144,7 +144,6 @@ class WidgetLogic(QWidget):
     def send_link_handler(self):
         """
         SendButton控件点击触发的槽
-        :return: None
         """
         if self.link_flag != self.NoLink:
             loop_flag = self.__ui.LoopSendCheckBox.checkState()  # 循环发送标识
