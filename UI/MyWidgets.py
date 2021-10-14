@@ -1,15 +1,15 @@
 from PyQt5.QtCore import QRegExp, pyqtSignal
 from PyQt5.QtGui import QIntValidator, QRegExpValidator, QValidator
-from PyQt5.QtWidgets import QLineEdit, QPushButton, QLabel, QInputDialog
+from PyQt5.QtWidgets import QInputDialog, QLabel, QLineEdit, QPushButton
 
 
 class PortLineEdit(QLineEdit):
     class PortValidator(QIntValidator):
         def fixup(self, inputs: str) -> str:
             if len(inputs) == 0:
-                return ''
+                return ""
             elif int(inputs) > 65535:
-                return '7777'
+                return "7777"
             return inputs
 
     def __init__(self, parent=None):
@@ -26,11 +26,13 @@ class IPv4AddrLineEdit(QLineEdit):
     class IPValidator(QRegExpValidator):
         def validate(self, inputs: str, pos: int) -> [QValidator.State, str, int]:
             # 重写validate方法以实现可以自动把中文句号转化为英文句点的功能
-            inputs = inputs.replace('。', '.')
+            inputs = inputs.replace("。", ".")
             return super().validate(inputs, pos)
 
     # 一串神秘的正则表达式，可以验证IPv4类型的地址
-    reg_ex = QRegExp("((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)")
+    reg_ex = QRegExp(
+        "((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)"
+    )
 
     def __init__(self, parent=None):
         super().__init__(parent)

@@ -13,7 +13,7 @@ class CommonHelper:
     @staticmethod
     def read_qss(style):
         """读取QSS样式表的方法"""
-        with open(style, 'r') as f:
+        with open(style, "r") as f:
             return f.read()
 
 
@@ -72,10 +72,10 @@ class MainWindow(WidgetLogic, NetworkLogic):
         self.disconnect_signal_handler()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
-    styleFile = './Style/qss/flat_white.qss'
+    styleFile = "./Style/qss/flat_white.qss"
     import Style.qss_rc  # 导入资源
 
     qssStyle = CommonHelper.read_qss(styleFile)

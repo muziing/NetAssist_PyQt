@@ -1,5 +1,5 @@
-from PyQt5.QtCore import Qt, pyqtSignal, QTimer
-from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QWidget
 
 from Network import get_host_ip
 from UI import MainWindowUI
@@ -21,7 +21,7 @@ class WidgetLogic(QWidget):
         self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 保持窗口最前
         self.__ui.MyHostAddrLineEdit.setText(get_host_ip())  # 显示本机IP地址
 
-        self.protocol_type = 'TCP'
+        self.protocol_type = "TCP"
         self.link_flag = self.NoLink
         self.receive_show_flag = True  # 是否显示接收到的消息
         self.SendCounter = 0
@@ -29,13 +29,17 @@ class WidgetLogic(QWidget):
         self.dir = None
 
         self.counter_signal.connect(self.counter_signal_handler)
-        self.__ui.ProtocolTypeComboBox.activated[str].connect(self.protocol_type_combobox_handler)
+        self.__ui.ProtocolTypeComboBox.activated[str].connect(
+            self.protocol_type_combobox_handler
+        )
         self.__ui.ConnectButton.toggled.connect(self.connect_button_toggled_handler)
         self.__ui.SendButton.clicked.connect(self.send_link_handler)
         self.__ui.OpenFilePushButton.clicked.connect(self.open_file_handler)
         self.__ui.RSaveDataButton.clicked.connect(self.r_save_data_button_handler)
         self.__ui.CounterResetLabel.clicked.connect(self.counter_reset_button_handler)
-        self.__ui.ReceivePauseCheckBox.toggled.connect(self.receive_pause_checkbox_toggled_handler)
+        self.__ui.ReceivePauseCheckBox.toggled.connect(
+            self.receive_pause_checkbox_toggled_handler
+        )
 
     def connect_button_toggled_handler(self, state):
         if state:
@@ -56,7 +60,7 @@ class WidgetLogic(QWidget):
     def protocol_type_combobox_handler(self, p_type):
         """ProtocolTypeComboBox的槽函数"""
         self.protocol_type = p_type
-        if self.protocol_type == 'Web Server':
+        if self.protocol_type == "Web Server":
             self.__ui.SendPlainTextEdit.setPlainText("请打开index.html所在的文件路径")
             self.__ui.SendPlainTextEdit.setEnabled(False)
             self.__ui.OpenFilePushButton.setText("选择路径")
@@ -73,44 +77,50 @@ class WidgetLogic(QWidget):
 
         def get_int_port(port):
             # 用户未输入端口则置为-1
-            return -1 if port == '' else int(port)
+            return -1 if port == "" else int(port)
 
         my_port = get_int_port(self.__ui.MyPortLineEdit.text())
         target_port = get_int_port(self.__ui.TargetPortLineEdit.text())
         self.editable(False)  # 建立连接后不可再修改参数
 
-        if my_port == -1 and target_port == -1 and target_ip == '':
-            mb = QMessageBox(QMessageBox.Critical, '错误', '请输入信息', QMessageBox.Ok, self)
+        if my_port == -1 and target_port == -1 and target_ip == "":
+            mb = QMessageBox(QMessageBox.Critical, "错误", "请输入信息", QMessageBox.Ok, self)
             mb.open()
             self.editable(True)
             self.__ui.ConnectButton.setChecked(False)
             return None
-        elif my_port != -1 and target_port != -1 and target_ip != '':
-            mb = QMessageBox(QMessageBox.Critical, '错误', '输入的信息过多', QMessageBox.Ok, self)
+        elif my_port != -1 and target_port != -1 and target_ip != "":
+            mb = QMessageBox(
+                QMessageBox.Critical, "错误", "输入的信息过多", QMessageBox.Ok, self
+            )
             mb.open()
             self.editable(True)
             self.__ui.ConnectButton.setChecked(False)
             return None
-        elif target_port == -1 and target_ip == '':
+        elif target_port == -1 and target_ip == "":
             server_flag = True
-        elif target_port == -1 and target_ip != '':
+        elif target_port == -1 and target_ip != "":
             input_d = PortInputDialog(self)
             input_d.setWindowTitle("服务启动失败")
             input_d.setLabelText("请输入目标端口号作为Client启动，或取消")
-            input_d.intValueSelected.connect(lambda val: self.__ui.TargetPortLineEdit.setText(str(val)))
+            input_d.intValueSelected.connect(
+                lambda val: self.__ui.TargetPortLineEdit.setText(str(val))
+            )
             input_d.open()
             self.__ui.ConnectButton.setChecked(False)
             # 提前终止槽函数
             return None
-        elif target_port != -1 and target_ip == '':
-            mb = QMessageBox(QMessageBox.Critical, 'Client启动错误', '请输入目标IP地址', QMessageBox.Ok, self)
+        elif target_port != -1 and target_ip == "":
+            mb = QMessageBox(
+                QMessageBox.Critical, "Client启动错误", "请输入目标IP地址", QMessageBox.Ok, self
+            )
             mb.open()
             self.__ui.ConnectButton.setChecked(False)
             # 提前终止槽函数
             return None
         if self.protocol_type == "Web Server" and not self.dir:
             # 处理用户未选择工作路径情况下连接网络
-            self.dir = QFileDialog.getExistingDirectory(self, "选择index.html所在路径", './')
+            self.dir = QFileDialog.getExistingDirectory(self, "选择index.html所在路径", "./")
             if self.dir:
                 self.__ui.SendPlainTextEdit.clear()
                 self.__ui.SendPlainTextEdit.appendPlainText(str(self.dir))
@@ -120,7 +130,7 @@ class WidgetLogic(QWidget):
                 return None
 
         if self.protocol_type == "TCP" and server_flag:
-            self.link_signal.emit((self.ServerTCP, '', my_port))
+            self.link_signal.emit((self.ServerTCP, "", my_port))
             self.link_flag = self.ServerTCP
             self.__ui.StateLabel.setText("TCP服务端")
         elif self.protocol_type == "TCP" and not server_flag:
@@ -128,7 +138,7 @@ class WidgetLogic(QWidget):
             self.link_flag = self.ClientTCP
             self.__ui.StateLabel.setText("TCP客户端")
         elif self.protocol_type == "UDP" and server_flag:
-            self.link_signal.emit((self.ServerUDP, '', my_port))
+            self.link_signal.emit((self.ServerUDP, "", my_port))
             self.link_flag = self.ServerUDP
             self.__ui.StateLabel.setText("UDP服务端")
             # TODO 作为UDP服务端时禁用发送
@@ -137,7 +147,7 @@ class WidgetLogic(QWidget):
             self.link_flag = self.ClientUDP
             self.__ui.StateLabel.setText("UDP客户端")
         elif self.protocol_type == "Web Server" and server_flag and self.dir:
-            self.link_signal.emit((self.WebServer, '', my_port))
+            self.link_signal.emit((self.WebServer, "", my_port))
             self.link_flag = self.WebServer
             self.__ui.StateLabel.setText("Web server")
 
@@ -154,8 +164,12 @@ class WidgetLogic(QWidget):
                 send_timer = QTimer(self)
                 send_timer.start(int(self.__ui.LoopSendSpinBox.value()))
                 send_timer.timeout.connect(lambda: self.send_signal.emit(send_msg))
-                self.__ui.LoopSendCheckBox.stateChanged.connect(lambda val: send_timer.stop() if val == 0 else None)
-                self.__ui.ConnectButton.toggled.connect(lambda val: None if val else send_timer.stop())  # 断开连接停止计时
+                self.__ui.LoopSendCheckBox.stateChanged.connect(
+                    lambda val: send_timer.stop() if val == 0 else None
+                )
+                self.__ui.ConnectButton.toggled.connect(
+                    lambda val: None if val else send_timer.stop()
+                )  # 断开连接停止计时
 
     def msg_write(self, msg: str):
         """将提示消息写入ReceivePlainTextEdit"""
@@ -172,12 +186,16 @@ class WidgetLogic(QWidget):
         """
         if self.receive_show_flag:
             if mode == self.InfoRec:
-                self.__ui.ReceivePlainTextEdit.appendHtml(f'<font color="blue">{info}</font>')
+                self.__ui.ReceivePlainTextEdit.appendHtml(
+                    f'<font color="blue">{info}</font>'
+                )
                 self.ReceiveCounter += 1
                 self.counter_signal.emit(self.SendCounter, self.ReceiveCounter)
             elif mode == self.InfoSend:
-                self.__ui.ReceivePlainTextEdit.appendHtml(f'<font color="green">{info}</font>')
-            self.__ui.ReceivePlainTextEdit.appendHtml('\n')
+                self.__ui.ReceivePlainTextEdit.appendHtml(
+                    f'<font color="green">{info}</font>'
+                )
+            self.__ui.ReceivePlainTextEdit.appendHtml("\n")
         else:
             if mode == self.InfoRec:
                 self.ReceiveCounter += 1
@@ -205,12 +223,18 @@ class WidgetLogic(QWidget):
             def read_file(file_dir):
                 if file_dir:
                     try:
-                        with open(file_dir, 'r', encoding='UTF8') as f:
+                        with open(file_dir, "r", encoding="UTF8") as f:
                             self.__ui.SendPlainTextEdit.clear()
                             self.__ui.SendPlainTextEdit.appendPlainText(f.read())
                     except UnicodeDecodeError:
                         #  如果不能用UTF8解码
-                        mb = QMessageBox(QMessageBox.Critical, '无法读取文件', '无法读取文件，请检查输入', QMessageBox.Ok, self)
+                        mb = QMessageBox(
+                            QMessageBox.Critical,
+                            "无法读取文件",
+                            "无法读取文件，请检查输入",
+                            QMessageBox.Ok,
+                            self,
+                        )
                         mb.open()
 
             fd = QFileDialog(self, "选择一个文件", "./", "文本文件(*, *)")
@@ -219,8 +243,8 @@ class WidgetLogic(QWidget):
             fd.fileSelected.connect(read_file)
             fd.open()
 
-        elif self.link_flag == self.NoLink and self.protocol_type == 'Web Server':
-            self.dir = QFileDialog.getExistingDirectory(self, "选择index.html所在路径", './')
+        elif self.link_flag == self.NoLink and self.protocol_type == "Web Server":
+            self.dir = QFileDialog.getExistingDirectory(self, "选择index.html所在路径", "./")
             self.__ui.SendPlainTextEdit.clear()
             self.__ui.SendPlainTextEdit.appendPlainText(str(self.dir))
             self.__ui.SendPlainTextEdit.setEnabled(False)
@@ -228,9 +252,11 @@ class WidgetLogic(QWidget):
     def r_save_data_button_handler(self):
         """接收设置保存数据按键的槽函数"""
         text = self.__ui.ReceivePlainTextEdit.toPlainText()
-        file_name = QFileDialog.getSaveFileName(self, "保存到txt", "./", "ALL(*, *);;txt文件(*.txt)", "txt文件(*.txt)")[0]
+        file_name = QFileDialog.getSaveFileName(
+            self, "保存到txt", "./", "ALL(*, *);;txt文件(*.txt)", "txt文件(*.txt)"
+        )[0]
         try:
-            with open(file_name, mode='w') as f:
+            with open(file_name, mode="w") as f:
                 f.write(text)
         except FileNotFoundError:
             pass  # 如果用户取消输入，filename为空，会出现FileNotFoundError
@@ -254,8 +280,9 @@ class WidgetLogic(QWidget):
     InfoRec = 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
+
     from PyQt5.QtWidgets import QApplication
 
     app = QApplication(sys.argv)

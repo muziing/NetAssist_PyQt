@@ -17,7 +17,11 @@ class Ui_Form(object):
         Form.resize(700, 570)
         Form.setMinimumSize(QtCore.QSize(600, 500))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/img/Icons/Network.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(
+            QtGui.QPixmap(":/img/Icons/Network.png"),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.Off,
+        )
         Form.setWindowIcon(icon)
         self.gridLayout = QtWidgets.QGridLayout(Form)
         self.gridLayout.setContentsMargins(18, 18, 18, 8)
@@ -26,10 +30,14 @@ class Ui_Form(object):
         self.gridLayout.setObjectName("gridLayout")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        spacerItem = QtWidgets.QSpacerItem(20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(
+            20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.verticalLayout.addItem(spacerItem)
         self.ProtocolTypeLabel = QtWidgets.QLabel(Form)
-        self.ProtocolTypeLabel.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.ProtocolTypeLabel.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.ProtocolTypeLabel.setObjectName("ProtocolTypeLabel")
         self.verticalLayout.addWidget(self.ProtocolTypeLabel)
         self.ProtocolTypeComboBox = QtWidgets.QComboBox(Form)
@@ -38,78 +46,118 @@ class Ui_Form(object):
         self.ProtocolTypeComboBox.addItem("")
         self.ProtocolTypeComboBox.addItem("")
         self.verticalLayout.addWidget(self.ProtocolTypeComboBox)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.verticalLayout.addItem(spacerItem1)
         self.MyHostAddrLabel = QtWidgets.QLabel(Form)
-        self.MyHostAddrLabel.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.MyHostAddrLabel.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.MyHostAddrLabel.setObjectName("MyHostAddrLabel")
         self.verticalLayout.addWidget(self.MyHostAddrLabel)
         self.MyHostAddrLineEdit = QtWidgets.QLineEdit(Form)
         self.MyHostAddrLineEdit.setInputMask("")
-        self.MyHostAddrLineEdit.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.MyHostAddrLineEdit.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.MyHostAddrLineEdit.setReadOnly(True)
         self.MyHostAddrLineEdit.setObjectName("MyHostAddrLineEdit")
         self.verticalLayout.addWidget(self.MyHostAddrLineEdit)
-        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem2 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.verticalLayout.addItem(spacerItem2)
         self.MyPortLabel = QtWidgets.QLabel(Form)
-        self.MyPortLabel.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.MyPortLabel.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.MyPortLabel.setObjectName("MyPortLabel")
         self.verticalLayout.addWidget(self.MyPortLabel)
         self.MyPortLineEdit = PortLineEdit(Form)
         self.MyPortLineEdit.setInputMask("")
         self.MyPortLineEdit.setMaxLength(5)
-        self.MyPortLineEdit.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.MyPortLineEdit.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.MyPortLineEdit.setObjectName("MyPortLineEdit")
         self.verticalLayout.addWidget(self.MyPortLineEdit)
-        spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem3 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.verticalLayout.addItem(spacerItem3)
         self.label_4 = QtWidgets.QLabel(Form)
-        self.label_4.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.label_4.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.label_4.setObjectName("label_4")
         self.verticalLayout.addWidget(self.label_4)
         self.TargetIPLineEdit = IPv4AddrLineEdit(Form)
         self.TargetIPLineEdit.setMaxLength(15)
-        self.TargetIPLineEdit.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.TargetIPLineEdit.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.TargetIPLineEdit.setObjectName("TargetIPLineEdit")
         self.verticalLayout.addWidget(self.TargetIPLineEdit)
-        spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem4 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.verticalLayout.addItem(spacerItem4)
         self.label_6 = QtWidgets.QLabel(Form)
-        self.label_6.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.label_6.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.label_6.setObjectName("label_6")
         self.verticalLayout.addWidget(self.label_6)
         self.TargetPortLineEdit = PortLineEdit(Form)
         self.TargetPortLineEdit.setMaxLength(5)
-        self.TargetPortLineEdit.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.TargetPortLineEdit.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.TargetPortLineEdit.setObjectName("TargetPortLineEdit")
         self.verticalLayout.addWidget(self.TargetPortLineEdit)
-        spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem5 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.verticalLayout.addItem(spacerItem5)
         self.ConnectButton = ConnectButton(Form)
         self.ConnectButton.setMinimumSize(QtCore.QSize(0, 40))
         self.ConnectButton.setMaximumSize(QtCore.QSize(16777215, 40))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/img/Icons/broken_link_72px.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon1.addPixmap(QtGui.QPixmap(":/img/Icons/link_72px.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon1.addPixmap(
+            QtGui.QPixmap(":/img/Icons/broken_link_72px.ico"),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.Off,
+        )
+        icon1.addPixmap(
+            QtGui.QPixmap(":/img/Icons/link_72px.ico"),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.On,
+        )
         self.ConnectButton.setIcon(icon1)
         self.ConnectButton.setCheckable(True)
         self.ConnectButton.setChecked(False)
         self.ConnectButton.setObjectName("ConnectButton")
         self.verticalLayout.addWidget(self.ConnectButton)
-        spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem6 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.verticalLayout.addItem(spacerItem6)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
         self.verticalLayout_4 = QtWidgets.QVBoxLayout()
         self.verticalLayout_4.setContentsMargins(5, 10, 0, 0)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.ReceiveLabel = QtWidgets.QLabel(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.ReceiveLabel.sizePolicy().hasHeightForWidth())
         self.ReceiveLabel.setSizePolicy(sizePolicy)
-        self.ReceiveLabel.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.ReceiveLabel.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.ReceiveLabel.setWordWrap(False)
         self.ReceiveLabel.setObjectName("ReceiveLabel")
         self.verticalLayout_4.addWidget(self.ReceiveLabel)
@@ -156,7 +204,9 @@ class Ui_Form(object):
         self.horizontalLayout_6.setSpacing(2)
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.label = QtWidgets.QLabel(self.tab_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
@@ -164,10 +214,14 @@ class Ui_Form(object):
         self.label.setObjectName("label")
         self.horizontalLayout_6.addWidget(self.label)
         self.LoopSendSpinBox = QtWidgets.QSpinBox(self.tab_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.LoopSendSpinBox.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.LoopSendSpinBox.sizePolicy().hasHeightForWidth()
+        )
         self.LoopSendSpinBox.setSizePolicy(sizePolicy)
         self.LoopSendSpinBox.setMinimumSize(QtCore.QSize(68, 0))
         self.LoopSendSpinBox.setMinimum(1)
@@ -192,7 +246,9 @@ class Ui_Form(object):
         self.OpenFilePushButton.setObjectName("OpenFilePushButton")
         self.gridLayout_2.addWidget(self.OpenFilePushButton, 0, 1, 1, 1)
         self.SendButton = QtWidgets.QPushButton(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.SendButton.sizePolicy().hasHeightForWidth())
@@ -205,26 +261,36 @@ class Ui_Form(object):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.label_7 = QtWidgets.QLabel(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
         self.label_7.setSizePolicy(sizePolicy)
-        self.label_7.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.label_7.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.label_7.setObjectName("label_7")
         self.horizontalLayout_3.addWidget(self.label_7)
         self.StateLabel = QtWidgets.QLabel(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.StateLabel.sizePolicy().hasHeightForWidth())
         self.StateLabel.setSizePolicy(sizePolicy)
         self.StateLabel.setMinimumSize(QtCore.QSize(120, 25))
         self.StateLabel.setMaximumSize(QtCore.QSize(120, 25))
-        self.StateLabel.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.StateLabel.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.StateLabel.setObjectName("StateLabel")
         self.horizontalLayout_3.addWidget(self.StateLabel)
-        spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem7 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout_3.addItem(spacerItem7)
         self.horizontalLayout_3.setStretch(1, 1)
         self.gridLayout.addLayout(self.horizontalLayout_3, 2, 0, 1, 1)
@@ -232,43 +298,69 @@ class Ui_Form(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.label_9 = QtWidgets.QLabel(Form)
         self.label_9.setToolTip("")
-        self.label_9.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.label_9.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.label_9.setObjectName("label_9")
         self.horizontalLayout_4.addWidget(self.label_9)
         self.SendCounterLabel = QtWidgets.QLabel(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.SendCounterLabel.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.SendCounterLabel.sizePolicy().hasHeightForWidth()
+        )
         self.SendCounterLabel.setSizePolicy(sizePolicy)
         self.SendCounterLabel.setMinimumSize(QtCore.QSize(50, 0))
         self.SendCounterLabel.setMaximumSize(QtCore.QSize(50, 16777215))
-        self.SendCounterLabel.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
-        self.SendCounterLabel.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse|QtCore.Qt.TextSelectableByMouse)
+        self.SendCounterLabel.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
+        self.SendCounterLabel.setTextInteractionFlags(
+            QtCore.Qt.LinksAccessibleByMouse | QtCore.Qt.TextSelectableByMouse
+        )
         self.SendCounterLabel.setObjectName("SendCounterLabel")
         self.horizontalLayout_4.addWidget(self.SendCounterLabel)
-        spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem8 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout_4.addItem(spacerItem8)
         self.label_10 = QtWidgets.QLabel(Form)
-        self.label_10.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.label_10.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.label_10.setObjectName("label_10")
         self.horizontalLayout_4.addWidget(self.label_10)
         self.ReceiveCounterLabel = QtWidgets.QLabel(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ReceiveCounterLabel.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.ReceiveCounterLabel.sizePolicy().hasHeightForWidth()
+        )
         self.ReceiveCounterLabel.setSizePolicy(sizePolicy)
         self.ReceiveCounterLabel.setMinimumSize(QtCore.QSize(50, 0))
         self.ReceiveCounterLabel.setMaximumSize(QtCore.QSize(50, 16777215))
-        self.ReceiveCounterLabel.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
-        self.ReceiveCounterLabel.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse|QtCore.Qt.TextSelectableByMouse)
+        self.ReceiveCounterLabel.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
+        self.ReceiveCounterLabel.setTextInteractionFlags(
+            QtCore.Qt.LinksAccessibleByMouse | QtCore.Qt.TextSelectableByMouse
+        )
         self.ReceiveCounterLabel.setObjectName("ReceiveCounterLabel")
         self.horizontalLayout_4.addWidget(self.ReceiveCounterLabel)
-        spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem9 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout_4.addItem(spacerItem9)
         self.CounterResetLabel = CounterResetLabel(Form)
-        self.CounterResetLabel.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.CounterResetLabel.setAlignment(
+            QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft
+        )
         self.CounterResetLabel.setObjectName("CounterResetLabel")
         self.horizontalLayout_4.addWidget(self.CounterResetLabel)
         self.gridLayout.addLayout(self.horizontalLayout_4, 2, 1, 1, 1)
@@ -311,16 +403,22 @@ class Ui_Form(object):
         self.RSaveDataButton.setShortcut(_translate("Form", "Ctrl+S"))
         self.RClearButton.setToolTip(_translate("Form", "清空接收区显示"))
         self.RClearButton.setText(_translate("Form", "清空显示"))
-        self.send_receive_setting.setTabText(self.send_receive_setting.indexOf(self.tab), _translate("Form", "接收设置"))
+        self.send_receive_setting.setTabText(
+            self.send_receive_setting.indexOf(self.tab), _translate("Form", "接收设置")
+        )
         self.SendHEXCheckBox.setToolTip(_translate("Form", "以十六进制发送"))
         self.SendHEXCheckBox.setText(_translate("Form", "HEX(暂不支持)"))
         self.LoopSendCheckBox.setText(_translate("Form", "循环发送"))
         self.label.setText(_translate("Form", "循环时间"))
         self.LoopSendSpinBox.setSuffix(_translate("Form", " ms"))
-        self.send_receive_setting.setTabText(self.send_receive_setting.indexOf(self.tab_2), _translate("Form", "发送设置"))
+        self.send_receive_setting.setTabText(
+            self.send_receive_setting.indexOf(self.tab_2), _translate("Form", "发送设置")
+        )
         self.SendPlainTextEdit.setPlainText(_translate("Form", "https://muzing.top"))
         self.SendPlainTextEdit.setPlaceholderText(_translate("Form", "输入要发送的数据"))
-        self.OpenFilePushButton.setToolTip(_translate("Form", "打开要发送的文本文件或选择WebServer工作目录 Ctrl+O"))
+        self.OpenFilePushButton.setToolTip(
+            _translate("Form", "打开要发送的文本文件或选择WebServer工作目录 Ctrl+O")
+        )
         self.OpenFilePushButton.setText(_translate("Form", "打开文件"))
         self.OpenFilePushButton.setShortcut(_translate("Form", "Ctrl+O"))
         self.SendButton.setToolTip(_translate("Form", "Alt+Enter发送"))
@@ -335,5 +433,8 @@ class Ui_Form(object):
         self.ReceiveCounterLabel.setText(_translate("Form", "0"))
         self.CounterResetLabel.setToolTip(_translate("Form", "清零计数器"))
         self.CounterResetLabel.setText(_translate("Form", "复位计数"))
-from UI.MyWidgets import ConnectButton, CounterResetLabel, IPv4AddrLineEdit, PortLineEdit
+
+
 import UI.resources_rc
+from UI.MyWidgets import (ConnectButton, CounterResetLabel, IPv4AddrLineEdit,
+                          PortLineEdit)
