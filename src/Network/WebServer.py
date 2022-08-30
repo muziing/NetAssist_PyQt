@@ -6,7 +6,7 @@ from typing import Tuple
 
 from PyQt5.QtCore import pyqtSignal
 
-from src.Network import StopThreading
+from . import StopThreading
 
 
 class WebLogic:

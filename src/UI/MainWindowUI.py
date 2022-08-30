@@ -435,5 +435,4 @@ class Ui_Form(object):
         self.CounterResetLabel.setText(_translate("Form", "复位计数"))
 
 
-from src.UI.MyWidgets import (ConnectButton, CounterResetLabel, IPv4AddrLineEdit,
-                              PortLineEdit)
+from .MyWidgets import ConnectButton, CounterResetLabel, IPv4AddrLineEdit, PortLineEdit

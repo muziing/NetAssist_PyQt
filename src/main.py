@@ -75,7 +75,7 @@ class MainWindow(WidgetLogic, NetworkLogic):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
-    styleFile = "./Style/qss/flat_white.qss"
+    styleFile = "src/Style/qss/flat_white.qss"
     import Style.qss_rc  # 导入资源
 
     qssStyle = CommonHelper.read_qss(styleFile)

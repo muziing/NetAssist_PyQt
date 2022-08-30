@@ -4,7 +4,7 @@ from time import sleep
 
 from PyQt5.QtCore import pyqtSignal
 
-from src.Network import StopThreading
+from . import StopThreading
 
 
 class TcpLogic:
