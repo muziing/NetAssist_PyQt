@@ -3,7 +3,7 @@ import threading
 
 from PyQt5.QtCore import pyqtSignal
 
-from Network import StopThreading
+from src.Network import StopThreading
 
 
 def get_host_ip() -> str:
